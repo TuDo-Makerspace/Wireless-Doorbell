@@ -18,18 +18,30 @@
 
 #ifdef TARGET_DEV_DOOR
 
+#ifndef AP_SSID
+#error No AP SSID specified! Please define AP_SSID in the build flags!
+#endif
+
+#ifndef AP_PWD
+#error No AP password specified! Please define AP_PWD in the build flags!
+#endif
+
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
+#include <log.h>
 #include <Beacon.h>
 #include <StatusLED.h>
+
+#define REV "1.0.0"
 
 #define CONNECTION_LED D0
 #define POWER_LED D1
 #define BTN_STAT D2
 
-#define INDICATOR_LIGHTS_BLINK_INTERVAL
+#define INDICATOR_LIGHTS_BLINK_INTERVAL 250 //ms
 #define AP_ERR_BLINKS 5
+#define CONN_TIMEOUT 20000 //ms (Should be at least 2x HOST_BEACON_TIMEOUT)
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 
@@ -39,10 +51,30 @@ StatusLED *conn_led;
 
 BeaconStatus stat;
 
+void boot_msg()
+{
+        log_msg("Boot", "___       __   __"); 
+        log_msg("Boot", " |  |  | |  \\ /  \\");
+        log_msg("Boot", " |  \\__/ |__/ \\__/");                
+        log_msg("Boot", "");                                     
+        log_msg("Boot", " __   __   __   __   __   ___");     
+        log_msg("Boot", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
+        log_msg("Boot", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
+        log_msg("Boot", "");
+        log_msg("Boot", "Author:\t\tPatrick Pedersen");
+        log_msg("Boot", "License:\tGPLv3");
+        log_msg("Boot", "Build date:\t" + String(__DATE__));
+        log_msg("Boot", "Revision:\t" + String(REV) + "_DOOR");
+        log_msg("Boot", "Source code:\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
+        log_msg("Boot", "Device type:\tDoor");
+        DBG_LOG("Boot", "AP SSID:\t" + String(AP_SSID));
+        DBG_LOG("Boot", "AP Password:\t" + String(AP_PWD));
+        log_msg("Boot", "");
+}
+
 void setup()
 {
-
-        beacon = new Beacon();
+        beacon = new Beacon(AP_SSID, AP_PWD, CONN_TIMEOUT);
         power_led = new StatusLED(POWER_LED, INDICATOR_LIGHTS_BLINK_INTERVAL);
         conn_led = new StatusLED(CONNECTION_LED, INDICATOR_LIGHTS_BLINK_INTERVAL);
         
@@ -53,16 +85,19 @@ void setup()
         Serial.begin(115200);
         Serial.println();
 
-        Serial.println("Starting beacon...");
+        boot_msg();
+
+        log_msg("Beacon", "Starting beacon");
+        
         bool res = beacon->start();
         conn_led->mode(BLINK);
 
         if (res) {
-                Serial.println("Successfully created Beacon");
+                log_msg("Beacon", "Successfully created beacon with a timeout of " + String(CONN_TIMEOUT) + "s");
                 stat = ACTIVE;
         } else {
                 power_led->mode(BLINK);
-                Serial.println("Failed to create Beacon");
+                log_msg("Beacon", "Failed to create beacon");
 
                 while(power_led->blinks() <= AP_ERR_BLINKS) {
                         power_led->update();
@@ -81,13 +116,13 @@ void loop()
                         power_led->mode(BLINK);
                         conn_led->mode(BLINK);
                         stat = TIMEOUT;
-                        Serial.println("Beacon timed out!");
+                        log_msg("Beacon", "No device connected, timing out");
                 }
                 else if (beacon->status() == SPOTTED) {
                         conn_led->mode(ON);
                         beacon->stop();
                         stat = SPOTTED;
-                        Serial.println("Beacon spotted!");
+                        log_msg("Beacon", "Beacon spotted");
                 }
 
                 power_led->update();
@@ -112,7 +147,7 @@ void loop()
                 conn_led->mode(OFF);
 
                 if (!digitalRead(digitalRead(BTN_STAT))) {
-                        void; // Power off
+                        // void; // Power off
                 }
         }
 }

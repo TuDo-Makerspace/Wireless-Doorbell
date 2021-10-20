@@ -19,9 +19,15 @@
 #include <ESP8266WiFi.h>
 #include <Scanner.h>
 
+Scanner::Scanner(const char *ap_ssid, const char *ap_pwd)
+{
+        strcpy(ssid, ap_ssid);
+        strcpy(pwd, ap_pwd);
+}
+
 void Scanner::start()
 {
-        WiFi.begin(AP_SSID, AP_PWD);
+        WiFi.begin(ssid, pwd);
 }
 
 bool Scanner::scan()

@@ -21,17 +21,26 @@
 
 #include <Beacon.h>
 
+Beacon::Beacon(const char *ap_ssid, const char *ap_pwd, unsigned long timeout) : timeout(timeout)
+{
+        strcpy(ssid, ap_ssid);
+        strcpy(pwd, ap_pwd);
+}
+
 bool Beacon::start()
 {
-        bool ret = WiFi.softAP(AP_SSID, AP_PWD);
-        tout = millis() + (CONN_TIMEOUT * 1000);
+        bool ret = WiFi.softAP(ssid, pwd);
+        tstamp = millis() + timeout;
         running = true;
         return ret;
 }
 
 BeaconStatus Beacon::status()
 {
-        if (millis() >= tout)
+        if (!running)
+                return INACTIVE;
+
+        if (millis() >= tstamp)
                 return TIMEOUT;
         
         if (wifi_softap_get_station_info() != NULL) {
@@ -39,7 +48,7 @@ BeaconStatus Beacon::status()
                 return SPOTTED;
         }
 
-        return running ? ACTIVE : INACTIVE;
+        return ACTIVE;
 }
 
 void Beacon::stop()

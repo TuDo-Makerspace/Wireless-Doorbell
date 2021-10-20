@@ -18,16 +18,15 @@
 
 #pragma once
 
-#ifndef AP_SSID
-#error No AP SSID specified! Please define AP_SSID in the build flags!
-#endif
-
-#ifndef AP_PWD
-#error No AP password specified! Please define AP_PWD in the build flags!
-#endif
+#include <Beacon.h>
 
 class Scanner {
+        char ssid[MAX_SSID_LEN];
+        char pwd[MAX_PWD_LEN];
+        
 public:
+        // TODO: PARAMETERIZE AP_
+        Scanner(const char *ap_ssid, const char *ap_pwd);
         void start();
         bool scan();
         void stop();

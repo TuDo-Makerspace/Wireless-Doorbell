@@ -21,15 +21,8 @@
 #include <ESP8266WiFi.h>
 #include <StatusLED.h>
 
-#ifndef AP_SSID
-#error No AP SSID specified! Please define AP_SSID in the build flags!
-#endif
-
-#ifndef AP_PWD
-#error No AP password specified! Please define AP_PWD in the build flags!
-#endif
-
-#define CONN_TIMEOUT 10 //s
+#define MAX_SSID_LEN 32
+#define MAX_PWD_LEN 63
 
 enum BeaconStatus {
         ACTIVE,
@@ -39,9 +32,14 @@ enum BeaconStatus {
 };
 
 class Beacon {
-        unsigned long tout;
+        char ssid[MAX_SSID_LEN];
+        char pwd[MAX_PWD_LEN];
+        unsigned long timeout;
+        
+        unsigned long tstamp;
         bool running = false;
 public:
+        Beacon(const char *ap_ssid, const char *ap_pwd, unsigned long timeout);
         bool start();
         BeaconStatus status();
         void stop();

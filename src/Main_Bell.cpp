@@ -18,29 +18,45 @@
 
 #ifdef TARGET_DEV_BELL
 
+#ifndef SCAN_AP_SSID
+#error No targeted SSID specified! Please define SCAN_AP_SSID in the build flags!
+#endif
+
+#ifndef SCAN_AP_PWD
+#error No targeted password specified! Please define SCAN_AP_PWD in the build flags!
+#endif
+
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
+#include <log.h>
 #include <StatusLED.h>
 #include <Scanner.h>
 #include <Bell.h>
+#include <Beacon.h>
 
-#define BUZZER D0
+#define REV "1.0.0"
+
 #define BELL_LED D1
+#define BUZZER D2
 
 #define AP_ERR_BLINKS 5
+#define HOST_BEACON_TIMEOUT 10000 //ms
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 #define BELL_LED_BLINK_INTERVAL NOTE_DURATION //ms
 #define BELL_LED_BLINKS BELL_MELODY_LEN/2
 
-void detect_rings(Scanner *scanner, unsigned int &inc)
+bool ring_detected(Scanner *scanner)
 {
-        static bool prev_scan = scanner->scan();
+        static bool prev_scan = false;
+        bool ret = false;
         bool curr_scan = scanner->scan();
-        if (!prev_scan && curr_scan)
-                inc++;
+        
+        ret = (!prev_scan && curr_scan);
         prev_scan = curr_scan;
+
+        return ret;
 }
 
 bool ring_bell(Bell *bell, BellLED_t *led)
@@ -72,29 +88,110 @@ bool ring_bell(Bell *bell, BellLED_t *led)
         return !(bell_complete && blink_complete);
 }
 
+void boot_msg()
+{
+        log_msg("Boot", "___       __   __"); 
+        log_msg("Boot", " |  |  | |  \\ /  \\");
+        log_msg("Boot", " |  \\__/ |__/ \\__/");                
+        log_msg("Boot", "");                                     
+        log_msg("Boot", " __   __   __   __   __   ___");     
+        log_msg("Boot", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
+        log_msg("Boot", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
+        log_msg("Boot", "");
+        log_msg("Boot", "Author:\t\tPatrick Pedersen");
+        log_msg("Boot", "License:\tGPLv3");
+        log_msg("Boot", "Build date:\t" + String(__DATE__));
+        log_msg("Boot", "Revision:\t" + String(REV) + "_BELL");
+        log_msg("Boot", "Source code:\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
+        log_msg("Boot", "Device type:\tBell");
+        DBG_LOG("Boot", "Scan AP SSID:\t" + String(SCAN_AP_SSID));
+        DBG_LOG("Boot", "Scan AP Password:\t" + String(SCAN_AP_PWD));
+        
+#ifdef HOST_AP_SSID
+        DBG_LOG("Boot", "Host AP SSID:\t" + String(HOST_AP_SSID));
+        DBG_LOG("Boot", "Host AP Password:\t" + String(HOST_AP_PWD));
+#endif
+
+        log_msg("Boot", "");
+}
+
+#ifdef HOST_AP_SSID
+Beacon *beacon;
+#endif
+
 Scanner *scanner;
+
 Bell *bell;
 BellLED_t *led;
 
 void setup()
 {
-        scanner = new Scanner();
+#ifdef HOST_AP_SSID
+        beacon = new Beacon(HOST_AP_SSID, HOST_AP_PWD, HOST_BEACON_TIMEOUT);
+#endif
+        scanner = new Scanner(SCAN_AP_SSID, SCAN_AP_PWD);
         bell = new Bell(BUZZER);
         led = new BellLED_t(BELL_LED, BELL_LED_BLINK_INTERVAL);
 
         Serial.begin(115200);
         Serial.println();
 
+        boot_msg();
+
         scanner->start();
+        log_msg("Scanner", "Started scanner");
 }
 
-unsigned int rings = 0;
+bool ring = false;
+bool bell_complete = false;
+bool beacon_complete = false;
 
 void loop()
 {
-        detect_rings(scanner, rings);
-        if (rings > 0 && !ring_bell(bell, led))
-                rings--;
+        if (!ring && ring_detected(scanner)) {
+                ring = true;
+                bell_complete = false;
+                beacon_complete = false;
+                log_msg("Scanner", "Detected ring signal");
+#ifdef HOST_AP_SSID
+                scanner->stop();
+#endif
+        }
+
+        if (ring) {
+                if (!bell_complete && !ring_bell(bell, led))
+                        bell_complete = true;
+
+#ifdef HOST_AP_SSID
+                if (!beacon_complete) {
+                        BeaconStatus stat = beacon->status();
+
+                        if (stat == INACTIVE) {
+                                if (beacon->start())
+                                        log_msg("Beacon", "Starting forwarding beacon");
+                                else
+                                        log_msg("Beacon", "Failed to start forwarding beacon");
+                        }
+                        else if (stat == SPOTTED || stat == TIMEOUT) {
+
+                                if (stat == SPOTTED)
+                                        log_msg("Beacon", "Beacon spotted");
+                                else
+                                        log_msg("Beacon", "No device connected, timing out");
+                                        
+                                beacon->stop();
+                                scanner->start();
+                                beacon_complete = true;
+                        }
+                }
+
+                if (beacon_complete && bell_complete)
+                        ring = false;
+#else
+                if (bell_complete)
+                        ring = false;
+#endif
+        }
 }
 
 #endif
