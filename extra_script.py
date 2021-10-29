@@ -12,5 +12,5 @@ if after_arg == "":
 env.Replace(
         UPLOADERFLAGS = ['--before', before_arg, '--after', after_arg, '--chip', 'esp8266', '--port', '"$UPLOAD_PORT"', '--baud', '$UPLOAD_SPEED', 'write_flash'],
         UPLOADER="/usr/bin/esptool",
-        UPLOADCMD="$UPLOADER --before no_reset $UPLOADERFLAGS 0x0000 $SOURCE"
+        UPLOADCMD="$UPLOADER $UPLOADERFLAGS 0x0000 $SOURCE"
 )
