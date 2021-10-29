@@ -37,13 +37,16 @@
 
 #define CONNECTION_LED D0
 #define POWER_LED D1
-#define BTN_STAT D2
+#define POWER D2
 
 #define INDICATOR_LIGHTS_BLINK_INTERVAL 250 //ms
 #define AP_ERR_BLINKS 5
 #define CONN_TIMEOUT 20000 //ms (Should be at least 2x HOST_BEACON_TIMEOUT)
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
+
+#define LATCH_POWER() digitalWrite(POWER, HIGH)
+#define UNLATCH_POWER() digitalWrite(POWER, LOW)
 
 Beacon *beacon;
 StatusLED *power_led;
@@ -74,13 +77,14 @@ void boot_msg()
 
 void setup()
 {
+        pinMode(POWER, OUTPUT);
+        LATCH_POWER();
+
         beacon = new Beacon(AP_SSID, AP_PWD, CONN_TIMEOUT);
         power_led = new StatusLED(POWER_LED, INDICATOR_LIGHTS_BLINK_INTERVAL);
         conn_led = new StatusLED(CONNECTION_LED, INDICATOR_LIGHTS_BLINK_INTERVAL);
-        
-        power_led->mode(ON);
 
-        pinMode(BTN_STAT, INPUT);
+        power_led->mode(ON);
 
         Serial.begin(115200);
         Serial.println();
@@ -143,12 +147,8 @@ void loop()
         }
         
         if (stat == INACTIVE) {
-                power_led->mode(OFF);
                 conn_led->mode(OFF);
-
-                if (!digitalRead(digitalRead(BTN_STAT))) {
-                        // void; // Power off
-                }
+                UNLATCH_POWER();     
         }
 }
 
