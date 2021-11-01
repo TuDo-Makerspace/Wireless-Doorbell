@@ -10,7 +10,12 @@ if config.has_option("env", "pwd_file"):
         pwd_file_arg = env.GetProjectOption("pwd_file")
         f = open(pwd_file_arg, "r")
         pwd = f.readline()
-        projenv.Append(CPPDEFINES=("AP_PWD", '"\\"' + str(pwd) + '\\""'))
+else:
+        pwd = ""
+        
+projenv.Append(CPPDEFINES=("AP_PWD", "\\\"" + str(pwd) + "\\\""))
+projenv.Append(CPPDEFINES=("HOST_AP_PWD", "\\\"" + str(pwd) + "\\\""))
+projenv.Append(CPPDEFINES=("SCAN_AP_PWD", "\\\"" + str(pwd) + "\\\""))
 
 if before_arg == "":
         before_arg = "default_reset"
