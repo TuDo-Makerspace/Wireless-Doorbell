@@ -29,7 +29,12 @@ Beacon::Beacon(const char *ap_ssid, const char *ap_pwd, unsigned long timeout) :
 
 bool Beacon::start()
 {
-        bool ret = WiFi.softAP(ssid, pwd);
+        bool ret;
+#ifdef DEBUG
+        ret = WiFi.softAP(ssid, pwd, 1, false);
+#else
+        ret = WiFi.softAP(ssid, pwd, 1, true);
+#endif
         tstamp = millis() + timeout;
         running = true;
         return ret;

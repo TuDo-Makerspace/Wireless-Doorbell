@@ -79,6 +79,7 @@ void setup()
 {
         pinMode(POWER, OUTPUT);
         LATCH_POWER();
+        DBG_LOG("Power", "Power latched");
 
         beacon = new Beacon(AP_SSID, AP_PWD, CONN_TIMEOUT);
         power_led = new StatusLED(POWER_LED, INDICATOR_LIGHTS_BLINK_INTERVAL);
@@ -148,7 +149,8 @@ void loop()
         
         if (stat == INACTIVE) {
                 conn_led->mode(OFF);
-                UNLATCH_POWER();     
+                UNLATCH_POWER();
+                DBG_LOG("Power", "Power unlatched");
         }
 }
 
