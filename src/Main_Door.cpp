@@ -150,7 +150,11 @@ void loop()
         if (stat == INACTIVE) {
                 conn_led->mode(OFF);
                 UNLATCH_POWER();
-                DBG_LOG("Power", "Power unlatched");
+                static bool ultach_logged = false;
+                if (!ultach_logged) {
+                        log_msg("Power", "Power unlatched");
+                        ultach_logged = true;
+                }
         }
 }
 
