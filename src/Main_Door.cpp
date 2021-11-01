@@ -117,7 +117,6 @@ void loop()
 {
         if (stat == ACTIVE) {
                 if (beacon->status() == TIMEOUT) {
-                        beacon->stop();
                         power_led->mode(BLINK);
                         conn_led->mode(BLINK);
                         stat = TIMEOUT;
@@ -125,7 +124,6 @@ void loop()
                 }
                 else if (beacon->status() == SPOTTED) {
                         conn_led->mode(ON);
-                        beacon->stop();
                         stat = SPOTTED;
                         log_msg("Beacon", "Beacon spotted");
                 }
@@ -148,6 +146,7 @@ void loop()
         }
         
         if (stat == INACTIVE) {
+                beacon->stop();
                 conn_led->mode(OFF);
                 UNLATCH_POWER();
                 static bool ultach_logged = false;
