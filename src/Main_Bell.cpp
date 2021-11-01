@@ -159,9 +159,6 @@ void loop()
         }
 
         if (ring) {
-                if (!bell_complete && !ring_bell(bell, led))
-                        bell_complete = true;
-
 #ifdef HOST_AP_SSID
                 if (!beacon_complete) {
                         BeaconStatus stat = beacon->status();
@@ -184,6 +181,9 @@ void loop()
                                 beacon_complete = true;
                         }
                 }
+
+                if (!bell_complete && !ring_bell(bell, led))
+                        bell_complete = true;
 
                 if (beacon_complete && bell_complete)
                         ring = false;
