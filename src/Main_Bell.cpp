@@ -30,10 +30,12 @@
 #include <ESP8266WiFi.h>
 
 #include <log.h>
+#include <common.h>
 #include <StatusLED.h>
 #include <Scanner.h>
 #include <Bell.h>
 #include <Beacon.h>
+
 
 #define REV "1.0.0"
 
@@ -41,7 +43,7 @@
 #define BUZZER D2
 
 #define AP_ERR_BLINKS 5
-#define HOST_BEACON_TIMEOUT 10000 //ms
+#define HOST_BEACON_TIMEOUT 20000 //ms
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 #define BELL_LED_BLINK_INTERVAL NOTE_DURATION //ms
@@ -86,6 +88,45 @@ bool ring_bell(Bell *bell, BellLED_t *led)
         }
 
         return !(bell_complete && blink_complete);
+}
+
+bool forward_beacon(Beacon *bcn)
+{
+        static bool req_bcn_stop = false;
+        static unsigned long bcn_stop_tstamp;
+
+        if (req_bcn_stop) {
+                if (millis() >= bcn_stop_tstamp) {
+                        bcn->stop();
+                        req_bcn_stop = false;
+                        return false;
+                }
+
+                return true;
+        }
+
+        BeaconStatus stat = bcn->status();
+
+        if (stat == INACTIVE) {
+                if (bcn->start())
+                        log_msg("Beacon", "Starting forwarding beacon");
+                else
+                        log_msg("Beacon", "Failed to start forwarding beacon");
+        }
+        else if (stat == SPOTTED || stat == TIMEOUT) {
+                if (stat == SPOTTED) {
+                        log_msg("Beacon", "Beacon spotted");
+                        req_bcn_stop = true;
+                        bcn_stop_tstamp = millis() + MIN_SPOT_TIME;
+                }
+                else {
+                        log_msg("Beacon", "No device connected, timing out");
+                        req_bcn_stop = true;
+                        bcn_stop_tstamp = millis();
+                }
+        }
+
+        return true;
 }
 
 void boot_msg()
@@ -160,31 +201,15 @@ void loop()
 
         if (ring) {
 #ifdef HOST_AP_SSID
-                if (!beacon_complete) {
-                        BeaconStatus stat = beacon->status();
-
-                        if (stat == INACTIVE) {
-                                if (beacon->start())
-                                        log_msg("Beacon", "Starting forwarding beacon");
-                                else
-                                        log_msg("Beacon", "Failed to start forwarding beacon");
-                        }
-                        else if (stat == SPOTTED || stat == TIMEOUT) {
-
-                                if (stat == SPOTTED)
-                                        log_msg("Beacon", "Beacon spotted");
-                                else
-                                        log_msg("Beacon", "No device connected, timing out");
-                                        
-                                beacon->stop();
-                                scanner->start();
-                                beacon_complete = true;
-                        }
+                if (!beacon_complete && !forward_beacon(beacon)) {
+                        scanner->start();
+                        beacon_complete = true;
                 }
-
+#endif
                 if (!bell_complete && !ring_bell(bell, led))
                         bell_complete = true;
 
+#ifdef HOST_AP_SSID
                 if (beacon_complete && bell_complete)
                         ring = false;
 #else

@@ -30,6 +30,7 @@
 #include <ESP8266WiFi.h>
 
 #include <log.h>
+#include <common.h>
 #include <Beacon.h>
 #include <StatusLED.h>
 
@@ -41,7 +42,7 @@
 
 #define INDICATOR_LIGHTS_BLINK_INTERVAL 250 //ms
 #define AP_ERR_BLINKS 5
-#define CONN_TIMEOUT 20000 //ms (Should be at least 2x HOST_BEACON_TIMEOUT)
+#define CONN_TIMEOUT 30000 //ms (Should be at least 2x HOST_BEACON_TIMEOUT)
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 
@@ -113,6 +114,9 @@ void setup()
         }
 }
 
+bool wait_min_spot_time = false;
+unsigned long min_spot_tstamp;
+
 void loop()
 {
         if (stat == ACTIVE) {
@@ -143,16 +147,22 @@ void loop()
         else if (stat == SPOTTED) {
                 delay(CONN_SUCCESS_TIME);
                 stat = INACTIVE;
+                wait_min_spot_time = true;
+                min_spot_tstamp = millis() + MIN_SPOT_TIME;
         }
         
         if (stat == INACTIVE) {
-                beacon->stop();
-                conn_led->mode(OFF);
-                UNLATCH_POWER();
-                static bool ultach_logged = false;
-                if (!ultach_logged) {
-                        log_msg("Power", "Power unlatched");
-                        ultach_logged = true;
+                if (wait_min_spot_time) {
+                        wait_min_spot_time = (millis() >= min_spot_tstamp);
+                } else {
+                        beacon->stop();
+                        conn_led->mode(OFF);
+                        UNLATCH_POWER();
+                        static bool ultach_logged = false;
+                        if (!ultach_logged) {
+                                log_msg("Power", "Power unlatched");
+                                ultach_logged = true;
+                        }
                 }
         }
 }
