@@ -21,30 +21,7 @@
 #include <stddef.h>
 #include <inttypes.h>
 
-#include <pitches.h>
-
-#define NOTE_DURATION 50 //ms
-
-const unsigned int BELL_MELODY[] = {
-        NOTE_D7, NOTE_D7, NOTE_D7, NOTE_PAUSE,
-        NOTE_D7, NOTE_D7, NOTE_D7, NOTE_PAUSE,
-        NOTE_D8, NOTE_D8, NOTE_D8, NOTE_D8,
-        NOTE_D8, NOTE_D8, NOTE_PAUSE, NOTE_PAUSE,
-        NOTE_A7, NOTE_A7, NOTE_A7, NOTE_A7, 
-        NOTE_A7, NOTE_A7, NOTE_PAUSE, NOTE_PAUSE,
-        NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, 
-        NOTE_GS7, NOTE_GS7, NOTE_GS7, NOTE_GS7, 
-        NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, 
-        NOTE_G7, NOTE_G7, NOTE_G7, NOTE_G7, 
-        NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE, 
-        NOTE_F7, NOTE_F7, NOTE_F7, NOTE_F7, 
-        NOTE_F7, NOTE_F7, NOTE_F7, NOTE_PAUSE,
-        NOTE_D7, NOTE_D7, NOTE_D7, NOTE_PAUSE,
-        NOTE_F7, NOTE_F7, NOTE_F7, NOTE_PAUSE,
-        NOTE_G7, NOTE_G7, NOTE_G7
-};
-
-#define BELL_MELODY_LEN sizeof(BELL_MELODY) / sizeof(unsigned int)
+#include <melodies.h>
 
 class Bell {
         uint8_t pin;
@@ -52,6 +29,9 @@ class Bell {
         unsigned long tstamp;
 
 public:
-        Bell(uint8_t pin);
+        note_t *melody;
+        size_t melody_len;
+
+        Bell(uint8_t pin, const note_t mel[], size_t len);
         bool play();
 };

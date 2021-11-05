@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include <inttypes.h>
+
+typedef uint16_t note_t;
+
 /*************************************************
  * Public Constants
  *************************************************/
