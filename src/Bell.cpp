@@ -19,7 +19,7 @@
 #include <Arduino.h>
 #include <Bell.h>
 
-Bell::Bell(uint8_t pin) : pin(pin)
+Bell::Bell(uint8_t pin, const note_t melody[]) : pin(pin), melody(melody)
 {
         pinMode(pin, OUTPUT);
         tstamp = millis();
