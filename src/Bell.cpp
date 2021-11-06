@@ -38,7 +38,7 @@ bool Bell::play()
         if (!curr_tone_init || t_passed) {
                 curr_tone++;
                 
-                if (curr_tone == melody_len) {
+                if ((size_t)curr_tone == melody_len) {
                         curr_tone = -1;
                         tone(pin, 0);
                         return false;
