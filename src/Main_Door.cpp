@@ -158,10 +158,10 @@ void loop()
                         beacon->stop();
                         conn_led->mode(OFF);
                         UNLATCH_POWER();
-                        static bool ultach_logged = false;
-                        if (!ultach_logged) {
+                        static bool unlatch_logged = false;
+                        if (!unlatch_logged) {
                                 log_msg("Power", "Power unlatched");
-                                ultach_logged = true;
+                                unlatch_logged = true;
                         }
                 }
         }

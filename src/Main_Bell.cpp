@@ -36,7 +36,6 @@
 #include <Bell.h>
 #include <Beacon.h>
 
-
 #define REV "1.0.0"
 
 #define BELL_LED D1
