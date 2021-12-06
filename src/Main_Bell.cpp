@@ -46,7 +46,7 @@
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 #define BELL_LED_BLINK_INTERVAL NOTE_DURATION //ms
-#define BELL_LED_BLINKS BELL_MELODY_LEN/2
+#define BELL_MELODY MEGALOVANIA // See melodies.h
 
 bool ring_detected(Scanner *scanner)
 {
@@ -78,7 +78,7 @@ bool ring_bell(Bell *bell, BellLED_t *led)
                 if (led->getMode() != BLINK) {
                         led->mode(BLINK);
                 }
-                else if (led->blinks() == BELL_LED_BLINKS) {
+                else if (led->blinks() == bell->melody_len/2) {
                         blink_complete = true;
                         led->mode(OFF);
                 } else {
@@ -170,7 +170,7 @@ void setup()
         beacon = new Beacon(HOST_AP_SSID, HOST_AP_PWD, HOST_BEACON_TIMEOUT);
 #endif
         scanner = new Scanner(SCAN_AP_SSID, SCAN_AP_PWD);
-        bell = new Bell(BUZZER);
+        bell = new Bell(BUZZER, BELL_MELODY, MELODY_LEN(BELL_MELODY));
         led = new BellLED_t(BELL_LED, BELL_LED_BLINK_INTERVAL);
 
         Serial.begin(115200);

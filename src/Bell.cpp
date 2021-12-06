@@ -16,11 +16,16 @@
  * 
  */
 
+#include <string.h>
+
 #include <Arduino.h>
 #include <Bell.h>
 
-Bell::Bell(uint8_t pin) : pin(pin)
+Bell::Bell(uint8_t pin, const note_t mel[], size_t melody_len) 
+: pin(pin), melody_len(melody_len)
 {
+        melody = new note_t[melody_len];
+        memcpy(melody, mel, melody_len * sizeof(note_t));
         pinMode(pin, OUTPUT);
         tstamp = millis();
 }
@@ -33,14 +38,14 @@ bool Bell::play()
         if (!curr_tone_init || t_passed) {
                 curr_tone++;
                 
-                if (curr_tone == BELL_MELODY_LEN) {
+                if ((size_t)curr_tone == melody_len) {
                         curr_tone = -1;
                         tone(pin, 0);
                         return false;
                 }
                 
                 tstamp = millis() + NOTE_DURATION;
-                tone(pin, BELL_MELODY[curr_tone]);
+                tone(pin, melody[curr_tone]);
         }
 
         return true;
