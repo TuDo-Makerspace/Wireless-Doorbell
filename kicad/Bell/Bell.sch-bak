@@ -1,0 +1,320 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:Buzzer BZ?
+U 1 1 61A5B409
+P 4400 1100
+F 0 "BZ?" H 4552 1129 50  0000 L CNN
+F 1 "Buzzer" H 4552 1038 50  0000 L CNN
+F 2 "" V 4375 1200 50  0001 C CNN
+F 3 "~" V 4375 1200 50  0001 C CNN
+	1    4400 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 61A5B6A0
+P 4400 4100
+F 0 "D?" V 4439 3983 50  0000 R CNN
+F 1 "LED" V 4348 3983 50  0000 R CNN
+F 2 "" H 4400 4100 50  0001 C CNN
+F 3 "~" H 4400 4100 50  0001 C CNN
+	1    4400 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:Q_NMOS_GDS Q?
+U 1 1 61A5CD90
+P 4300 4600
+F 0 "Q?" H 4504 4646 50  0000 L CNN
+F 1 "Q_NMOS_GDS" H 4504 4555 50  0000 L CNN
+F 2 "" H 4500 4700 50  0001 C CNN
+F 3 "~" H 4300 4600 50  0001 C CNN
+	1    4300 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61A5FDFE
+P 4400 4950
+F 0 "#PWR?" H 4400 4700 50  0001 C CNN
+F 1 "GND" H 4405 4777 50  0000 C CNN
+F 2 "" H 4400 4950 50  0001 C CNN
+F 3 "" H 4400 4950 50  0001 C CNN
+	1    4400 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 61A60433
+P 4300 2800
+F 0 "D?" V 4339 2683 50  0000 R CNN
+F 1 "LED" V 4248 2683 50  0000 R CNN
+F 2 "" H 4300 2800 50  0001 C CNN
+F 3 "~" H 4300 2800 50  0001 C CNN
+	1    4300 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 61A61407
+P 6350 1000
+F 0 "D?" V 6389 883 50  0000 R CNN
+F 1 "LED" V 6298 883 50  0000 R CNN
+F 2 "" H 6350 1000 50  0001 C CNN
+F 3 "~" H 6350 1000 50  0001 C CNN
+	1    6350 1000
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 61A61932
+P 5900 1000
+F 0 "R?" V 5693 1000 50  0000 C CNN
+F 1 "R" V 5784 1000 50  0000 C CNN
+F 2 "" V 5830 1000 50  0001 C CNN
+F 3 "~" H 5900 1000 50  0001 C CNN
+	1    5900 1000
+	0    1    1    0   
+$EndComp
+$Comp
+L ZC563900:ZC563900 U?
+U 1 1 61A640E5
+P 1950 3600
+F 0 "U?" H 1950 4767 50  0000 C CNN
+F 1 "NodeMCUv3" H 1950 4676 50  0000 C CNN
+F 2 "MODULE_ZC563900" H 1950 3600 50  0001 L BNN
+F 3 "" H 1950 3600 50  0001 L BNN
+F 4 "N/A" H 1950 3600 50  0001 L BNN "MAXIMUM_PACKAGE_HEIGHT"
+F 5 "1.0" H 1950 3600 50  0001 L BNN "PARTREV"
+F 6 "YKS" H 1950 3600 50  0001 L BNN "MANUFACTURER"
+F 7 "Manufacturer Recommendations" H 1950 3600 50  0001 L BNN "STANDARD"
+	1    1950 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2650 5000 2650 4500
+$Comp
+L power:GND #PWR?
+U 1 1 61A68C55
+P 2650 5000
+F 0 "#PWR?" H 2650 4750 50  0001 C CNN
+F 1 "GND" H 2655 4827 50  0000 C CNN
+F 2 "" H 2650 5000 50  0001 C CNN
+F 3 "" H 2650 5000 50  0001 C CNN
+	1    2650 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 61A6CC2E
+P 1250 2400
+F 0 "#PWR?" H 1250 2250 50  0001 C CNN
+F 1 "VCC" H 1267 2573 50  0000 C CNN
+F 2 "" H 1250 2400 50  0001 C CNN
+F 3 "" H 1250 2400 50  0001 C CNN
+	1    1250 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1250 2400 1250 2900
+Text GLabel 2800 3000 2    50   Input ~ 0
+RING_LED
+Wire Wire Line
+	2800 3000 2650 3000
+Text GLabel 2800 3100 2    50   Input ~ 0
+RING_BUZZER
+Wire Wire Line
+	2800 3100 2650 3100
+Text GLabel 2800 3200 2    50   Input ~ 0
+POWER_LED
+Wire Wire Line
+	2800 3200 2650 3200
+Text GLabel 4150 1000 0    50   Input ~ 0
+RING_BUZZER
+Wire Wire Line
+	4150 1000 4300 1000
+$Comp
+L power:GND #PWR?
+U 1 1 61A71D43
+P 4300 1350
+F 0 "#PWR?" H 4300 1100 50  0001 C CNN
+F 1 "GND" H 4305 1177 50  0000 C CNN
+F 2 "" H 4300 1350 50  0001 C CNN
+F 3 "" H 4300 1350 50  0001 C CNN
+	1    4300 1350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 1350 4300 1200
+Wire Wire Line
+	6200 1000 6050 1000
+Text GLabel 5600 1000 0    50   Input ~ 0
+POWER_LED
+Wire Wire Line
+	5600 1000 5750 1000
+$Comp
+L power:GND #PWR?
+U 1 1 61A788ED
+P 6650 1150
+F 0 "#PWR?" H 6650 900 50  0001 C CNN
+F 1 "GND" H 6655 977 50  0000 C CNN
+F 2 "" H 6650 1150 50  0001 C CNN
+F 3 "" H 6650 1150 50  0001 C CNN
+	1    6650 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 1150 6650 1000
+Wire Wire Line
+	6650 1000 6500 1000
+Wire Wire Line
+	4400 3800 4400 3950
+Wire Wire Line
+	4400 4250 4400 4400
+Wire Wire Line
+	4400 4800 4400 4950
+Text GLabel 3950 4600 0    50   Input ~ 0
+RING_LED
+Wire Wire Line
+	3950 4600 4100 4600
+$Comp
+L power:VCC #PWR?
+U 1 1 61A82152
+P 4400 3800
+F 0 "#PWR?" H 4400 3650 50  0001 C CNN
+F 1 "VCC" H 4417 3973 50  0000 C CNN
+F 2 "" H 4400 3800 50  0001 C CNN
+F 3 "" H 4400 3800 50  0001 C CNN
+	1    4400 3800
+	1    0    0    -1  
+$EndComp
+Text GLabel 4300 2500 1    50   Input ~ 0
+RING_LED
+Wire Wire Line
+	4300 2500 4300 2650
+$Comp
+L power:GND #PWR?
+U 1 1 61A8548F
+P 4300 3100
+F 0 "#PWR?" H 4300 2850 50  0001 C CNN
+F 1 "GND" H 4305 2927 50  0000 C CNN
+F 2 "" H 4300 3100 50  0001 C CNN
+F 3 "" H 4300 3100 50  0001 C CNN
+	1    4300 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 3100 4300 2950
+$Comp
+L Connector:Jack-DC J?
+U 1 1 61A8C6E8
+P 900 1200
+F 0 "J?" H 957 1525 50  0000 C CNN
+F 1 "Jack-DC" H 957 1434 50  0000 C CNN
+F 2 "" H 950 1160 50  0001 C CNN
+F 3 "~" H 950 1160 50  0001 C CNN
+	1    900  1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 61A8FE59
+P 2350 950
+F 0 "#PWR?" H 2350 800 50  0001 C CNN
+F 1 "VCC" H 2367 1123 50  0000 C CNN
+F 2 "" H 2350 950 50  0001 C CNN
+F 3 "" H 2350 950 50  0001 C CNN
+	1    2350 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C?
+U 1 1 61A97954
+P 1850 1400
+F 0 "C?" H 1968 1446 50  0000 L CNN
+F 1 "CP" H 1968 1355 50  0000 L CNN
+F 2 "" H 1888 1250 50  0001 C CNN
+F 3 "~" H 1850 1400 50  0001 C CNN
+	1    1850 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61A91468
+P 1850 1700
+F 0 "#PWR?" H 1850 1450 50  0001 C CNN
+F 1 "GND" H 1855 1527 50  0000 C CNN
+F 2 "" H 1850 1700 50  0001 C CNN
+F 3 "" H 1850 1700 50  0001 C CNN
+	1    1850 1700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 1100 1850 1100
+Wire Wire Line
+	1850 1100 1850 1250
+Wire Wire Line
+	2350 950  2350 1100
+Wire Wire Line
+	2350 1100 1850 1100
+Connection ~ 1850 1100
+Wire Wire Line
+	1850 1550 1850 1700
+$Comp
+L power:GND #PWR?
+U 1 1 61A9F4DB
+P 1350 1700
+F 0 "#PWR?" H 1350 1450 50  0001 C CNN
+F 1 "GND" H 1355 1527 50  0000 C CNN
+F 2 "" H 1350 1700 50  0001 C CNN
+F 3 "" H 1350 1700 50  0001 C CNN
+	1    1350 1700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 1700 1350 1300
+Wire Wire Line
+	1350 1300 1200 1300
+Text Notes 600  650  0    50   ~ 0
+[OPTIONAL] External DC Power Input to drive bells with brighter ring LEDs 
+Wire Notes Line
+	3500 550  3500 5300
+Wire Notes Line
+	550  550  550  5300
+Text Notes 600  2050 0    50   ~ 0
+NodeMCUv3
+Text Notes 3550 650  0    50   ~ 0
+Buzzer
+Wire Notes Line
+	6800 550  6800 1950
+Wire Notes Line
+	550  1950 6800 1950
+Wire Notes Line
+	550  550  6800 550 
+Text Notes 5100 650  0    50   ~ 0
+Power Indicator LED
+Text Notes 3550 2050 0    50   ~ 0
+Ring Indicator LED - Option 1
+Wire Notes Line
+	5050 550  5050 5300
+Wire Notes Line
+	550  5300 5050 5300
+Wire Notes Line
+	3500 3350 5050 3350
+Text Notes 3550 3450 0    50   ~ 0
+Ring Indicator LED - Option 2
+$EndSCHEMATC
