@@ -46,7 +46,7 @@
 #define CONN_TIMEOUT_BLINKS 3
 #define CONN_SUCCESS_TIME 2000 //ms
 #define BELL_LED_BLINK_INTERVAL NOTE_DURATION //ms
-#define BELL_MELODY MEGALOVANIA // See melodies.h
+#define BELL_MELODY DEFAULT_CHIME // See melodies.h
 
 bool ring_detected(Scanner *scanner)
 {
