@@ -10,17 +10,6 @@
   )
 
   (page A4)
-  (title_block
-    (title "TUDO Doorbell PCB / Door")
-    (date 2021-12-07)
-    (rev V1.0)
-    (company "TUDO Makerspace")
-    (comment 1 https://tapr.org/the-tapr-open-hardware-license/)
-    (comment 2 "License: TAPR Open Hardware License v1.0")
-    (comment 3 ctx.xda@gmail.com)
-    (comment 4 "Author: Patrick Pedersen")
-  )
-
   (layers
     (0 F.Cu signal)
     (31 B.Cu signal)
