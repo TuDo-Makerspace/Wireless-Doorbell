@@ -19,10 +19,16 @@
 #include <Arduino.h>
 #include <StatusLED.h>
 
-StatusLED::StatusLED(uint8_t pin, unsigned long blink_interval_ms) : pin(pin), blink_interval(blink_interval_ms)
+StatusLED::StatusLED(uint8_t pin, unsigned long blink_interval_ms) : pin(pin)
 {
         pinMode(pin, OUTPUT);
+        setBlinkInterval(blink_interval_ms);
         mode(OFF);
+}
+
+void StatusLED::setBlinkInterval(unsigned long interval)
+{
+        blink_interval = interval;
 }
 
 void StatusLED::mode(LEDMode m) {

@@ -36,7 +36,8 @@ class StatusLED {
 
 public:
         StatusLED();
-        StatusLED(uint8_t pin, unsigned long blink_interval_ms);
+        StatusLED(uint8_t pin, unsigned long blink_interval = 500);
+        void setBlinkInterval(unsigned long interval);
         void mode(LEDMode m);
         LEDMode getMode();
         void update();

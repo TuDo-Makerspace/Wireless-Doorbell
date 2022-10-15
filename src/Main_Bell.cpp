@@ -1,67 +1,26 @@
-/*
- * Copyright (C) 2021 Patrick Pedersen, TUDO Makerspace
-
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
- */
-
 #ifdef TARGET_DEV_BELL
 
-#ifndef SCAN_AP_SSID
-#error No targeted SSID specified! Please define SCAN_AP_SSID in the build flags!
-#endif
-
-#ifndef SCAN_AP_PWD
-#error No targeted password specified! Please define SCAN_AP_PWD in the build flags!
-#endif
-
-#include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
 
 #include <log.h>
-#include <common.h>
-#include <StatusLED.h>
-#include <Scanner.h>
+#include <ring_msg.h>
 #include <Bell.h>
-#include <Beacon.h>
+#include <StatusLED.h>
 
-#define REV "1.0.0"
+#include "config.h"
 
-#define BELL_LED D1
-#define BUZZER D2
+IPAddress door_ip;
 
-#define AP_ERR_BLINKS 5
-#define HOST_BEACON_TIMEOUT 20000 //ms
-#define CONN_TIMEOUT_BLINKS 3
-#define CONN_SUCCESS_TIME 2000 //ms
-#define BELL_LED_BLINK_INTERVAL NOTE_DURATION //ms
-#define BELL_MELODY DEFAULT_CHIME // See melodies.h
+static Bell bell = Bell(BELL_BUZZER, BELL_MELODY, MELODY_LEN(BELL_MELODY));
+static StatusLED led = StatusLED(BELL_LED);
 
-bool ring_detected(Scanner *scanner)
+static AsyncClient *door_client;
+
+bool ring(Bell *bell, BellLED_t *led)
 {
-        static bool prev_scan = false;
-        bool ret = false;
-        bool curr_scan = scanner->scan();
-        
-        ret = (!prev_scan && curr_scan);
-        prev_scan = curr_scan;
+	led->setBlinkInterval(NOTE_DURATION);
 
-        return ret;
-}
-
-bool ring_bell(Bell *bell, BellLED_t *led)
-{
         static bool bell_complete = false;
         static bool blink_complete = false;
         
@@ -89,133 +48,140 @@ bool ring_bell(Bell *bell, BellLED_t *led)
         return !(bell_complete && blink_complete);
 }
 
-bool forward_beacon(Beacon *bcn)
+ /* clients events */
+static void handleError(void* arg, AsyncClient* client, int8_t error)
 {
-        static bool req_bcn_stop = false;
-        static unsigned long bcn_stop_tstamp;
+	log_msg("handleError", "Connection error " + String(client->errorToString(error)) + " from client " + client->remoteIP().toString());
+}
 
-        if (req_bcn_stop) {
-                if (millis() >= bcn_stop_tstamp) {
-                        bcn->stop();
-                        req_bcn_stop = false;
-                        return false;
-                }
+static void handleData(void* arg, AsyncClient* client, void *data, size_t len)
+{
+	uint8_t msg;
 
-                return true;
-        }
+	if (len != 1)
+		goto INVALID_PACKET;
 
-        BeaconStatus stat = bcn->status();
+	msg = *((uint8_t *)data);
 
-        if (stat == INACTIVE) {
-                if (bcn->start())
-                        log_msg("Beacon", "Starting forwarding beacon");
-                else
-                        log_msg("Beacon", "Failed to start forwarding beacon");
-        }
-        else if (stat == SPOTTED || stat == TIMEOUT) {
-                if (stat == SPOTTED) {
-                        log_msg("Beacon", "Beacon spotted");
-                        req_bcn_stop = true;
-                        bcn_stop_tstamp = millis() + MIN_SPOT_TIME;
-                }
-                else {
-                        log_msg("Beacon", "No device connected, timing out");
-                        req_bcn_stop = true;
-                        bcn_stop_tstamp = millis();
-                }
-        }
+	if (msg == RING_MSG)
+		log_msg("handleData", "Ring message received!");
+	else
+		goto INVALID_PACKET;
 
-        return true;
+	client->close();
+	while(ring(&bell, &led));
+
+	return;
+
+	INVALID_PACKET:
+		log_msg("handleData", "Invalid packet received");
+		client->close();
+}
+
+static void handleDisconnect(void* arg, AsyncClient* client)
+{
+	log_msg("handleDisconnect", "Client disconnected");
+}
+
+static void handleTimeOut(void* arg, AsyncClient* client, uint32_t time)
+{
+	log_msg("handleTimeOut", "Client timed out");
+}
+
+
+/* server events */
+static void handleNewClient(void* arg, AsyncClient* client)
+{
+	// Check if IP matches door
+	IPAddress client_ip = client->remoteIP();
+
+	log_msg("handleNewClient", "New client connected with IP: " + client_ip.toString());
+
+	if (client_ip != door_ip) {
+		log_msg("handleNewClient", "Client IP does not match door IP, ignoring connection");
+		client->close();
+		return;
+	}
+	
+	door_client = client;
+	
+	// register events
+	client->onData(&handleData, NULL);
+	client->onError(&handleError, NULL);
+	client->onDisconnect(&handleDisconnect, NULL);
+	client->onTimeout(&handleTimeOut, NULL);
 }
 
 void boot_msg()
 {
-        log_msg("Boot", "___       __   __"); 
-        log_msg("Boot", " |  |  | |  \\ /  \\");
-        log_msg("Boot", " |  \\__/ |__/ \\__/");                
-        log_msg("Boot", "");                                     
-        log_msg("Boot", " __   __   __   __   __   ___");     
-        log_msg("Boot", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
-        log_msg("Boot", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
-        log_msg("Boot", "");
-        log_msg("Boot", "Author:\t\tPatrick Pedersen");
-        log_msg("Boot", "License:\tGPLv3");
-        log_msg("Boot", "Build date:\t" + String(__DATE__));
-        log_msg("Boot", "Revision:\t" + String(REV) + "_BELL");
-        log_msg("Boot", "Source code:\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
-        log_msg("Boot", "Device type:\tBell");
-        DBG_LOG("Boot", "Scan AP SSID:\t" + String(SCAN_AP_SSID));
-        DBG_LOG("Boot", "Scan AP Password:\t" + String(SCAN_AP_PWD));
-        
-#ifdef HOST_AP_SSID
-        DBG_LOG("Boot", "Host AP SSID:\t" + String(HOST_AP_SSID));
-        DBG_LOG("Boot", "Host AP Password:\t" + String(HOST_AP_PWD));
-#endif
-
-        log_msg("Boot", "");
+        log_msg("boot_msg", "---------------------------------------------------------------------------");
+        log_msg("boot_msg", "___       __   __"); 
+        log_msg("boot_msg", " |  |  | |  \\ /  \\");
+        log_msg("boot_msg", " |  \\__/ |__/ \\__/");                
+        log_msg("boot_msg", "");                                     
+        log_msg("boot_msg", " __   __   __   __   __   ___");     
+        log_msg("boot_msg", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
+        log_msg("boot_msg", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
+        log_msg("boot_msg", "");
+        log_msg("boot_msg", "Author:\t\tPatrick Pedersen");
+        log_msg("boot_msg", "License:\t\tGPLv3");
+        log_msg("boot_msg", "Build date:\t\t" + String(__DATE__));
+        log_msg("boot_msg", "Software Revision:\t" + String(SW_REV) + "_BELL");
+        log_msg("boot_msg", "Hardware Revision:\t" + String(HW_REV) + "_BELL");
+        log_msg("boot_msg", "Source code:\t\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
+        log_msg("boot_msg", "Device type:\t\tBell");
+        log_msg("boot_msg", "Targeted SSID:\t" + String(WIFI_SSID));
+        log_msg("boot_msg", "---------------------------------------------------------------------------");
+        log_msg("boot_msg", "");
 }
-
-#ifdef HOST_AP_SSID
-Beacon *beacon;
-#endif
-
-Scanner *scanner;
-
-Bell *bell;
-BellLED_t *led;
 
 void setup()
 {
-#ifdef HOST_AP_SSID
-        beacon = new Beacon(HOST_AP_SSID, HOST_AP_PWD, HOST_BEACON_TIMEOUT);
-#endif
-        scanner = new Scanner(SCAN_AP_SSID, SCAN_AP_PWD);
-        bell = new Bell(BUZZER, BELL_MELODY, MELODY_LEN(BELL_MELODY));
-        led = new BellLED_t(BELL_LED, BELL_LED_BLINK_INTERVAL);
+	Serial.begin(115200);
+	delay(500);
+	Serial.println();
+	boot_msg();
 
-        Serial.begin(115200);
-        Serial.println();
+	const String door_ip_str = DOOR_IP;
+	
+	if (!door_ip.fromString(door_ip_str)) {
+		log_msg("Setup", "FATAL: Invalid door IP provided, exiting");
+		return;
+	}
 
-        boot_msg();
+        WiFi.begin(WIFI_SSID, WIFI_PSK);
 
-        scanner->start();
-        log_msg("Scanner", "Started scanner");
+	IPAddress ip;
+	ip.fromString(BELL_IP);
+
+	IPAddress gateway;
+	gateway.fromString(GATEWAY); 
+
+	IPAddress subnet(255,255,255,0); 
+
+	WiFi.config(ip, gateway, subnet);
+
+	log_msg("setup", "Attempting to connect to: " + String(WIFI_SSID));
+
+	led.setBlinkInterval(BELL_LED_CONNECTING_BLINK_INTERVAL);
+	led.mode(BLINK);
+
+	while(WiFi.waitForConnectResult() != WL_CONNECTED)
+		led.update();
+
+	led.mode(OFF);
+	led.update();
+
+	log_msg("setup", "Connected to " + String(WIFI_SSID));
+	log_msg("setup", "IP address: " + WiFi.localIP().toString());
+
+	AsyncServer* server = new AsyncServer(TCP_PORT);
+	server->onClient(&handleNewClient, server);
+	server->begin();
 }
-
-bool ring = false;
-bool bell_complete = false;
-bool beacon_complete = false;
 
 void loop()
 {
-        if (!ring && ring_detected(scanner)) {
-                ring = true;
-                bell_complete = false;
-                beacon_complete = false;
-                log_msg("Scanner", "Detected ring signal");
-#ifdef HOST_AP_SSID
-                scanner->stop();
-#endif
-        }
-
-        if (ring) {
-#ifdef HOST_AP_SSID
-                if (!beacon_complete && !forward_beacon(beacon)) {
-                        scanner->start();
-                        beacon_complete = true;
-                }
-#endif
-                if (!bell_complete && !ring_bell(bell, led))
-                        bell_complete = true;
-
-#ifdef HOST_AP_SSID
-                if (beacon_complete && bell_complete)
-                        ring = false;
-#else
-                if (bell_complete)
-                        ring = false;
-#endif
-        }
 }
 
 #endif
