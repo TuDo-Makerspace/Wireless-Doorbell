@@ -10,45 +10,12 @@
 
 #include "config.h"
 
-IPAddress door_ip;
-
-static Bell bell = Bell(BELL_BUZZER, BELL_MELODY, MELODY_LEN(BELL_MELODY));
+static IPAddress door_ip;
+static AsyncClient *door_client;
+static Bell bell = Bell(BELL_BUZZER, BELL_LED, BELL_MELODY, MELODY_LEN(BELL_MELODY));
 static StatusLED led = StatusLED(BELL_LED);
 
-static AsyncClient *door_client;
 
-bool ring(Bell *bell, BellLED_t *led)
-{
-	led->setBlinkInterval(NOTE_DURATION);
-
-        static bool bell_complete = false;
-        static bool blink_complete = false;
-        
-        if (bell_complete && blink_complete) {
-                bell_complete = false;
-                blink_complete = false;  
-        }  
-
-        if (!bell_complete && !bell->play()) {
-                bell_complete = true;
-        }
-        
-        if (!blink_complete) {
-                if (led->getMode() != BLINK) {
-                        led->mode(BLINK);
-                }
-                else if (led->blinks() == bell->melody_len/2) {
-                        blink_complete = true;
-                        led->mode(OFF);
-                } else {
-                        led->update();
-                }
-        }
-
-        return !(bell_complete && blink_complete);
-}
-
- /* clients events */
 static void handleError(void* arg, AsyncClient* client, int8_t error)
 {
 	log_msg("handleError", "Connection error " + String(client->errorToString(error)) + " from client " + client->remoteIP().toString());
@@ -69,7 +36,7 @@ static void handleData(void* arg, AsyncClient* client, void *data, size_t len)
 		goto INVALID_PACKET;
 
 	client->close();
-	while(ring(&bell, &led));
+	bell.ring();
 
 	return;
 
@@ -182,6 +149,7 @@ void setup()
 
 void loop()
 {
+	bell.update();
 }
 
 #endif

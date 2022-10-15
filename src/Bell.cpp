@@ -21,12 +21,12 @@
 #include <Arduino.h>
 #include <Bell.h>
 
-Bell::Bell(uint8_t pin, const note_t mel[], size_t melody_len) 
-: pin(pin), melody_len(melody_len)
+Bell::Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_len) 
+: bzr_pin(bzr_pin), led(StatusLED(led_pin, NOTE_DURATION)), melody_len(melody_len)
 {
         melody = new note_t[melody_len];
         memcpy(melody, mel, melody_len * sizeof(note_t));
-        pinMode(pin, OUTPUT);
+        pinMode(bzr_pin, OUTPUT);
         tstamp = millis();
 }
 
@@ -40,14 +40,32 @@ bool Bell::play()
                 
                 if ((size_t)curr_tone == melody_len) {
                         curr_tone = -1;
-                        tone(pin, 0);
+                        tone(bzr_pin, 0);
                         return false;
                 }
                 
                 tstamp = millis() + NOTE_DURATION;
-                tone(pin, melody[curr_tone]);
+                tone(bzr_pin, melody[curr_tone]);
         }
 
         return true;
+}
 
+bool Bell::ring()
+{
+        if (ringing)
+                return false;
+
+        ringing = true;
+        return true;
+}
+
+void Bell::update()
+{
+        if (ringing) {
+                ringing = play();
+                led.mode(ringing ? BLINK : OFF);
+        }
+
+        led.update();
 }
