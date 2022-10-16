@@ -64,11 +64,13 @@ static void handleNewClient(void* arg, AsyncClient* client)
 
 	log_msg("handleNewClient", "New client connected with IP: " + client_ip.toString());
 
+#ifndef DEBUG
 	if (client_ip != door_ip) {
 		log_msg("handleNewClient", "Client IP does not match door IP, ignoring connection");
 		client->close();
 		return;
 	}
+#endif
 	
 	door_client = client;
 	
