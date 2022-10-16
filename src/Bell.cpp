@@ -21,8 +21,10 @@
 #include <Arduino.h>
 #include <Bell.h>
 
+#include "config.h"
+
 Bell::Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_len) 
-: bzr_pin(bzr_pin), led(StatusLED(led_pin, NOTE_DURATION)), melody_len(melody_len)
+: bzr_pin(bzr_pin), led(StatusLED(led_pin)), melody_len(melody_len)
 {
         melody = new note_t[melody_len];
         memcpy(melody, mel, melody_len * sizeof(note_t));
@@ -41,11 +43,14 @@ bool Bell::play()
                 if ((size_t)curr_tone == melody_len) {
                         curr_tone = -1;
                         tone(bzr_pin, 0);
+                        led.mode(OFF);
                         return false;
                 }
                 
                 tstamp = millis() + NOTE_DURATION;
+#ifndef BELL_SILENT
                 tone(bzr_pin, melody[curr_tone]);
+#endif
         }
 
         return true;
@@ -56,16 +61,15 @@ bool Bell::ring()
         if (ringing)
                 return false;
 
+        led.mode(ON);
         ringing = true;
         return true;
 }
 
 void Bell::update()
 {
-        if (ringing) {
+        if (ringing)
                 ringing = play();
-                led.mode(ringing ? BLINK : OFF);
-        }
 
         led.update();
 }

@@ -29,6 +29,7 @@ class Bell {
         StatusLED led;
         int curr_tone = -1;
         unsigned long tstamp;
+        unsigned long half_tstamp;
         bool ringing = false;
 
         bool play();
