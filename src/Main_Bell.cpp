@@ -128,27 +128,63 @@ void setup()
 
 	WiFi.config(ip, gateway, subnet);
 
-	log_msg("setup", "Attempting to connect to: " + String(WIFI_SSID));
-
-	led.setBlinkInterval(BELL_LED_CONNECTING_BLINK_INTERVAL);
-	led.mode(BLINK);
-
-	while(WiFi.waitForConnectResult() != WL_CONNECTED)
-		led.update();
-
-	led.mode(OFF);
-	led.update();
-
-	log_msg("setup", "Connected to " + String(WIFI_SSID));
-	log_msg("setup", "IP address: " + WiFi.localIP().toString());
-
 	AsyncServer* server = new AsyncServer(TCP_PORT);
 	server->onClient(&handleNewClient, server);
 	server->begin();
 }
 
-void loop()
+void on_connect()
 {
+	log_msg("on_connect", "Connected to " + String(WIFI_SSID));
+	log_msg("on_connect", "IP address: " + WiFi.localIP().toString());
+
+	led.mode(OFF);
+	led.update();
+}
+
+void on_not_connect(bool init = false)
+{
+	if (init)
+		log_msg("on_not_connect", "Attempting to establish connection with " + String(WIFI_SSID));
+	else
+		log_msg("on_not_connect", "Lost connection to " + String(WIFI_SSID) + ", retrying...");
+
+	led.setBlinkInterval(BELL_LED_CONNECTING_BLINK_INTERVAL);
+	led.mode(BLINK);
+}
+
+void while_not_connected()
+{
+	led.update();
+
+}
+
+void while_connected()
+{
+	led.update();
+}
+
+void wifi_monitor()
+{
+	uint8_t con = WiFi.status();
+	static int prev_con = -1;
+
+	if (con == WL_CONNECTED) {
+		if (con != prev_con)
+			on_connect();
+
+		while_connected();
+	} else {
+		if (con != prev_con)
+			on_not_connect(prev_con == -1);
+
+		while_not_connected();
+	}
+}
+
+void loop()
+{	
+	wifi_monitor(); // TODO: Turn this into a class
 	bell.update();
 }
 

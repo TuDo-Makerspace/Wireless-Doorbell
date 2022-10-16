@@ -27,13 +27,12 @@ enum LEDMode {
 };
 
 class StatusLED {
-    uint8_t pin;
-    bool stat;
-    LEDMode mod;
-    unsigned long blink_interval;
-    unsigned long tstamp;
-    unsigned int blks;
-
+        uint8_t pin;
+        bool stat;
+        LEDMode mod;
+        unsigned long blink_interval;
+        unsigned long tstamp;
+        unsigned int blks;
 public:
         StatusLED();
         StatusLED(uint8_t pin, unsigned long blink_interval = 500);
