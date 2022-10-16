@@ -7,6 +7,7 @@
 #include <ring_msg.h>
 #include <Bell.h>
 #include <StatusLED.h>
+#include <WiFiMonitor.h>
 
 #include "config.h"
 
@@ -14,7 +15,7 @@ static IPAddress door_ip;
 static AsyncClient *door_client;
 static Bell bell = Bell(BELL_BUZZER, BELL_LED, BELL_MELODY, MELODY_LEN(BELL_MELODY));
 static StatusLED led = StatusLED(BELL_LED);
-
+static WiFiMonitor wifi_monitor = WiFiMonitor(BELL_LED, BELL_LED_CONNECTING_BLINK_INTERVAL);
 
 static void handleError(void* arg, AsyncClient* client, int8_t error)
 {
@@ -135,60 +136,9 @@ void setup()
 	server->begin();
 }
 
-void on_connect()
-{
-	log_msg("on_connect", "Connected to " + String(WIFI_SSID));
-	log_msg("on_connect", "IP address: " + WiFi.localIP().toString());
-
-	led.mode(OFF);
-	led.update();
-}
-
-void on_not_connect(bool init = false)
-{
-	if (init)
-		log_msg("on_not_connect", "Attempting to establish connection with " + String(WIFI_SSID));
-	else
-		log_msg("on_not_connect", "Lost connection to " + String(WIFI_SSID) + ", retrying...");
-
-	led.setBlinkInterval(BELL_LED_CONNECTING_BLINK_INTERVAL);
-	led.mode(BLINK);
-}
-
-void while_not_connected()
-{
-	led.update();
-
-}
-
-void while_connected()
-{
-	led.update();
-}
-
-void wifi_monitor()
-{
-	uint8_t con = WiFi.status();
-	static int prev_con = -1;
-
-	if (con == WL_CONNECTED) {
-		if (con != prev_con)
-			on_connect();
-
-		while_connected();
-	} else {
-		if (con != prev_con)
-			on_not_connect(prev_con == -1);
-
-		while_not_connected();
-	}
-
-	prev_con = con;
-}
-
 void loop()
 {	
-	wifi_monitor(); // TODO: Turn this into a class
+	wifi_monitor.update();
 	bell.update();
 }
 
