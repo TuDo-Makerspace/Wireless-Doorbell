@@ -4,6 +4,8 @@
 
 // WiFi
 
+// #define GATEWAY "192.168.0.1"
+
 #ifndef GATEWAY
 #warning No gateway specified! Assuming 192.168.0.1!
 #define GATEWAY "192.168.0.1"
@@ -12,7 +14,7 @@
 #define WIFI_SSID "TUDOMakerspace"
 #define WIFI_PSK "SECRET"
 
-// Authentication
+// Door Host ID
 #ifdef DEBUG
 #define DOOR_IP "192.168.0.30"
 #else
@@ -37,7 +39,7 @@
 // Pins & Peripherals
 #define DOOR_POWER_LED D1
 #define DOOR_POWER_LATCH D2
-#define DOOR_CONNECTION_LED D0
+#define DOOR_RING_LED D0
 
 // Revision
 #define SW_REV "2.0.0"
@@ -45,7 +47,8 @@
 
 #define DOOR_RING_CONFIRM_BLINK_INTERVAL NOTE_DURATION
 #define DOOR_RING_CONFIRM_BLINKS 20
-#define DOOR_NO_BELL_BLINKS 3
+#define DOOR_NO_BELLS_BLINKS 3
+#define DOOR_PARTIAL_SUCCESS_BLINKS 3
 
 #endif
 
@@ -70,6 +73,7 @@
 // Melody (See melodies.h)
 #ifdef DEBUG
 #define BELL_MELODY DEBUG_CHIME
+// #define BELL_SILENT // Uncomment to disable bell
 #elif !defined(BELL_MELODY)
 #define BELL_MELODY DEFAULT_CHIME
 #endif

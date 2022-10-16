@@ -1,3 +1,5 @@
+#ifdef TARGET_DEV_BELL
+
 /*
  * Copyright (C) 2021 Patrick Pedersen, TUDO Makerspace
 
@@ -73,3 +75,5 @@ void Bell::update()
 
         led.update();
 }
+
+#endif

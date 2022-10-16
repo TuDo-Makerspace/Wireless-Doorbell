@@ -6,6 +6,7 @@
 #include <log.h>
 #include <ring_msg.h>
 #include <StatusLED.h>
+#include <DoorUXHandler.h>
 
 #include "config.h"
 
@@ -16,17 +17,16 @@
 #define LATCH_POWER() digitalWrite(DOOR_POWER_LATCH, HIGH)
 #define UNLATCH_POWER() digitalWrite(DOOR_POWER_LATCH, LOW)
 
-static StatusLED power_led(DOOR_POWER_LED);
-static StatusLED ring_led(DOOR_CONNECTION_LED);
-
 static uint8_t bells_remaining = N_BELLS;
 static uint8_t bell_found = SEARCHING_BELL;
+
+static DoorUXHandler door_ux(N_BELLS, DOOR_RING_LED, DOOR_POWER_LED);
 
 void onConnect(void* arg, AsyncClient* client) {
 	log_msg("onConnect", "Connected to " + String(client->remoteIP().toString()));	
 	
 	const char msg = RING_MSG;
-	client->add(&msg, 0x1);
+	client->add(&msg, sizeof(msg));
 	
 	if (client->send())
 		log_msg("onConnect", "Sent ring message to " + String(client->remoteIP().toString()));
@@ -36,6 +36,7 @@ void onConnect(void* arg, AsyncClient* client) {
 	log_msg("onConnect", "Closing connection to " + String(client->remoteIP().toString()));
 	client->close();
 
+	door_ux.bellAcknowledged();
 	bell_found = BELL_FOUND;
 }
 
@@ -46,6 +47,8 @@ void onDisconnect(void* arg, AsyncClient* client) {
 		bell_found = BELL_NOT_FOUND;
 
 	log_msg("onDisconnect", "Disconnected from bell (" + String(bells_remaining) + " remaining)");
+
+	door_ux.bellDisconnected();
 }
 
 void boot_msg()
@@ -77,7 +80,7 @@ void setup()
         pinMode(DOOR_POWER_LATCH, OUTPUT);
         LATCH_POWER();
         DBG_LOG("setup", "Power latched");
-	power_led.mode(ON);
+	door_ux.update();
 
 	Serial.begin(115200);
 	Serial.println();
@@ -125,49 +128,13 @@ void setup()
 
 void loop()
 {
-	static bool led_info = false;
-	static bool blinking = false;
-
-	if (!led_info) {
-		if (bell_found == BELL_FOUND) {
-			if (!blinking) {
-				ring_led.setBlinkInterval(DOOR_RING_CONFIRM_BLINK_INTERVAL);
-				ring_led.mode(BLINK);
-				blinking = true;
-			}
-
-			if(ring_led.blinks() < DOOR_RING_CONFIRM_BLINKS) {
-				ring_led.update();
-			} else {
-				ring_led.mode(OFF);
-				ring_led.update();
-				led_info = true;
-			}
-		} else if (bell_found == BELL_NOT_FOUND) {
-			if (!blinking) {
-				log_msg("setup", "No bells found");
-				power_led.mode(BLINK);
-				blinking = true;
-			}
-			
-			if (power_led.blinks() < DOOR_NO_BELL_BLINKS) {
-				power_led.update();
-			} else {
-				power_led.mode(OFF);
-				power_led.update();
-				led_info = true;
-			}
-		}
-	}
-
-	if (led_info) {
-		if (bells_remaining == 0) {
-			UNLATCH_POWER();
-			static bool unlatch_logged = false;
-			if (!unlatch_logged) {
-				log_msg("loop", "Power unlatched");
-				unlatch_logged = true;
-			}
+	door_ux.update();
+	if (door_ux.done()) {
+		UNLATCH_POWER();
+		static bool unlatch_logged = false;
+		if (!unlatch_logged) {
+			log_msg("loop", "Power unlatched");
+			unlatch_logged = true;
 		}
 	}
 }
