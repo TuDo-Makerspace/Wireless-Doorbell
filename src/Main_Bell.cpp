@@ -182,6 +182,8 @@ void wifi_monitor()
 
 		while_not_connected();
 	}
+
+	prev_con = con;
 }
 
 void loop()
