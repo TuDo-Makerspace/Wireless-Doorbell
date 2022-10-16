@@ -65,8 +65,8 @@ void boot_msg()
         log_msg("boot_msg", "Author:\t\tPatrick Pedersen");
         log_msg("boot_msg", "License:\t\tGPLv3");
         log_msg("boot_msg", "Build date:\t\t" + String(__DATE__));
-        log_msg("boot_msg", "Software Revision:\t" + String(SW_REV) + "_DOOR_ALPHA");
-        log_msg("boot_msg", "Hardware Revision:\t" + String(HW_REV) + "_DOOR_ALPHA");
+        log_msg("boot_msg", "Software Revision:\t" + String(SW_REV) + "_DOOR");
+        log_msg("boot_msg", "Hardware Revision:\t" + String(HW_REV) + "_DOOR");
         log_msg("boot_msg", "Source code:\t\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
         log_msg("boot_msg", "Device type:\t\tDoor");
         log_msg("boot_msg", "Targeted SSID:\t" + String(WIFI_SSID));
@@ -103,7 +103,10 @@ void setup()
 
 	log_msg("setup", "Attempting to connect to: " + String(WIFI_SSID));
 
-	while(WiFi.waitForConnectResult() != WL_CONNECTED);
+	if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+		door_ux.wifiError();
+		return;
+	}
 
 	log_msg("setup", "Connected to " + String(WIFI_SSID));
 	log_msg("setup", "IP address: " + WiFi.localIP().toString());
@@ -126,17 +129,31 @@ void setup()
 	}
 }
 
+void power_off() {
+	UNLATCH_POWER();
+
+#ifdef DEBUG
+	digitalWrite(DOOR_RING_LED, LOW);
+	digitalWrite(DOOR_POWER_LED, LOW);
+	
+	static bool unlatch_logged = false;
+	if (!unlatch_logged) {
+		log_msg("power_off", "Power unlatched");
+		unlatch_logged = true;
+	}
+#endif
+
+}
+
 void loop()
 {
-	door_ux.update();
 	if (door_ux.done()) {
-		UNLATCH_POWER();
-		static bool unlatch_logged = false;
-		if (!unlatch_logged) {
-			log_msg("loop", "Power unlatched");
-			unlatch_logged = true;
-		}
+		power_off();
+		return;
 	}
+
+	door_ux.update();
+
 }
 
 #endif

@@ -14,8 +14,9 @@ class DoorUXHandler {
 	};
 
 	enum door_ux_err {
+		NO_WIFI,
 		PARTIAL_SUCCESS,
-		FAIL
+		FAIL,
 	};
 
 	uint8_t n_bells;
@@ -25,6 +26,7 @@ class DoorUXHandler {
 	StatusLED pwr_led;
 
 	bool init = false;
+	bool _done = false;
 	uint8_t successfull_connections = 0;
 	
 	req err_req = IDLE;
@@ -38,6 +40,7 @@ public:
 	DoorUXHandler(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin);
 	void bellAcknowledged();
 	void bellDisconnected();
+	void wifiError();
 	bool done();
 	void update();
 };

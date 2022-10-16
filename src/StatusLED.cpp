@@ -46,6 +46,12 @@ void StatusLED::mode(LEDMode m) {
                 tstamp = millis() + blink_interval;
                 break;
 
+        case BLINK_INV:
+                stat = LOW;
+                tstamp = millis() + blink_interval;
+                m = BLINK;
+                break;
+
         default:
                 break;
         }

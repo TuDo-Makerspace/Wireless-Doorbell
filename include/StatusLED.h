@@ -23,7 +23,8 @@
 enum LEDMode {
         OFF,
         ON,
-        BLINK
+        BLINK,
+        BLINK_INV
 };
 
 class StatusLED {

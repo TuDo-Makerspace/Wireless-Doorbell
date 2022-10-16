@@ -24,6 +24,8 @@ void DoorUXHandler::onLastDisconnect()
 	else if (successfull_connections < n_bells) {
 		err_type = PARTIAL_SUCCESS;
 		err_req = REQUEST;
+	} else {
+		_done = true;	
 	}
 }
 
@@ -45,10 +47,21 @@ void DoorUXHandler::bellDisconnected()
 	}
 }
 
+void DoorUXHandler::wifiError()
+{
+	err_type = NO_WIFI;
+	err_req = REQUEST;
+}
+
 void DoorUXHandler::handleError()
 {
 	if (err_req == REQUEST) {
 		switch(err_type) {
+			case NO_WIFI:
+				log_msg("DoorUXHandler::handleError", "Failed to connect to wifi! Powering off...");
+				pwr_led.mode(BLINK_INV);
+				ring_led.mode(BLINK);
+				break;
 			case PARTIAL_SUCCESS:
 				log_msg("DoorUXHandler::handleError",  String(n_bells - successfull_connections) + "/" + String(n_bells) + " bells could not be contacted");
 				pwr_led.mode(BLINK);
@@ -64,6 +77,12 @@ void DoorUXHandler::handleError()
 	}
 
 	switch(err_type) {
+		case NO_WIFI:
+			if (pwr_led.blinks() >= DOOR_NO_WIFI_BLINKS &&
+			    ring_led.blinks() >= DOOR_NO_WIFI_BLINKS) {
+				err_req = COMPLETE;
+			}
+			break;
 		case PARTIAL_SUCCESS:
 			if (pwr_led.blinks() >= DOOR_PARTIAL_SUCCESS_BLINKS &&
 			    ring_led.blinks() >= DOOR_PARTIAL_SUCCESS_BLINKS) {
@@ -77,11 +96,16 @@ void DoorUXHandler::handleError()
 			}
 			break;
 	}
+
+	if (err_req == COMPLETE) {
+		err_req = IDLE;
+		_done = true;
+	}
 }
 
 bool DoorUXHandler::done()
 {
-	return (bells_remaining == 0 && err_req == COMPLETE);
+	return _done;
 }
 
 void DoorUXHandler::update()

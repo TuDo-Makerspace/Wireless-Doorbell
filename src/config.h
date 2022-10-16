@@ -42,13 +42,14 @@
 #define DOOR_RING_LED D0
 
 // Revision
-#define SW_REV "2.0.0"
+#define SW_REV "2.0.0_BETA"
 #define HW_REV "1.0.0"
 
 #define DOOR_RING_CONFIRM_BLINK_INTERVAL NOTE_DURATION
 #define DOOR_RING_CONFIRM_BLINKS 20
 #define DOOR_NO_BELLS_BLINKS 3
 #define DOOR_PARTIAL_SUCCESS_BLINKS 3
+#define DOOR_NO_WIFI_BLINKS 3
 
 #endif
 
