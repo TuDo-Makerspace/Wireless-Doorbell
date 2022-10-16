@@ -40,8 +40,8 @@ void DoorUXHandler::bellDisconnected()
 	if (bells_remaining > 0) {
 		if (bells_remaining == 1) {
 			onLastDisconnect();
-			bells_remaining--;
 		}
+		bells_remaining--;
 	}
 }
 
@@ -50,7 +50,7 @@ void DoorUXHandler::handleError()
 	if (err_req == REQUEST) {
 		switch(err_type) {
 			case PARTIAL_SUCCESS:
-				log_msg("DoorUXHandler::handleError",  String(n_bells - successfull_connections) + "/" + String(n_bells) + " could not be contacted");
+				log_msg("DoorUXHandler::handleError",  String(n_bells - successfull_connections) + "/" + String(n_bells) + " bells could not be contacted");
 				pwr_led.mode(BLINK);
 				ring_led.mode(BLINK);
 				break;
