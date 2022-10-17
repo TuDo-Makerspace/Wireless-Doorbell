@@ -7,7 +7,7 @@
 #include <ring_msg.h>
 #include <StatusLED.h>
 #include <config.h>
-#include <door/DoorUXHandler.h>
+#include <door/DoorUX.h>
 
 
 #define SEARCHING_BELL 0x0
@@ -20,7 +20,7 @@
 static uint8_t bells_remaining = N_BELLS;
 static uint8_t bell_found = SEARCHING_BELL;
 
-static DoorUXHandler door_ux(N_BELLS, DOOR_RING_LED, DOOR_POWER_LED);
+static DoorUX door_ux(N_BELLS, DOOR_RING_LED, DOOR_POWER_LED);
 
 void onConnect(void* arg, AsyncClient* client) {
 	log_msg("onConnect", "Connected to " + String(client->remoteIP().toString()));	

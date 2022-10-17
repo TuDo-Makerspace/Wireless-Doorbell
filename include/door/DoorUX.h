@@ -4,7 +4,7 @@
 
 #include <StatusLED.h>
 
-class DoorUXHandler {
+class DoorUX {
 	
 	enum req {
 		IDLE = 0,
@@ -37,7 +37,7 @@ class DoorUXHandler {
 	
 	void handleError();
 public:
-	DoorUXHandler(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin);
+	DoorUX(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin);
 	void bellAcknowledged();
 	void bellDisconnected();
 	void wifiError();

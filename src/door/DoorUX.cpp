@@ -2,18 +2,18 @@
 
 #include <log.h>
 #include <config.h>
-#include <door/DoorUXHandler.h>
+#include <door/DoorUX.h>
 
-DoorUXHandler::DoorUXHandler(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin)
+DoorUX::DoorUX(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin)
 : n_bells(n_bells), bells_remaining(n_bells), ring_led(ring_led_pin), pwr_led(pwr_led_pin) {
 }
 
-void DoorUXHandler::onFirstBellAck()
+void DoorUX::onFirstBellAck()
 {
 	ring_led.mode(ON);
 }
 
-void DoorUXHandler::onLastDisconnect()
+void DoorUX::onLastDisconnect()
 {
 	ring_led.mode(OFF);
 	if (successfull_connections == 0) {
@@ -28,7 +28,7 @@ void DoorUXHandler::onLastDisconnect()
 	}
 }
 
-void DoorUXHandler::bellAcknowledged()
+void DoorUX::bellAcknowledged()
 {
 	if (successfull_connections == 0) {
 		onFirstBellAck();
@@ -36,7 +36,7 @@ void DoorUXHandler::bellAcknowledged()
 	successfull_connections++;
 }
 
-void DoorUXHandler::bellDisconnected()
+void DoorUX::bellDisconnected()
 {
 	if (bells_remaining > 0) {
 		if (bells_remaining == 1) {
@@ -46,28 +46,28 @@ void DoorUXHandler::bellDisconnected()
 	}
 }
 
-void DoorUXHandler::wifiError()
+void DoorUX::wifiError()
 {
 	err_type = NO_WIFI;
 	err_req = REQUEST;
 }
 
-void DoorUXHandler::handleError()
+void DoorUX::handleError()
 {
 	if (err_req == REQUEST) {
 		switch(err_type) {
 			case NO_WIFI:
-				log_msg("DoorUXHandler::handleError", "Failed to connect to wifi! Powering off...");
+				log_msg("DoorUX::handleError", "Failed to connect to wifi! Powering off...");
 				pwr_led.mode(BLINK_INV);
 				ring_led.mode(BLINK);
 				break;
 			case PARTIAL_SUCCESS:
-				log_msg("DoorUXHandler::handleError",  String(n_bells - successfull_connections) + "/" + String(n_bells) + " bells could not be contacted");
+				log_msg("DoorUX::handleError",  String(n_bells - successfull_connections) + "/" + String(n_bells) + " bells could not be contacted");
 				pwr_led.mode(BLINK);
 				ring_led.mode(BLINK);
 				break;
 			case FAIL:
-				log_msg("DoorUXHandler::handleError", "No bells found");
+				log_msg("DoorUX::handleError", "No bells found");
 			default:
 				pwr_led.mode(BLINK);
 				break;
@@ -102,12 +102,12 @@ void DoorUXHandler::handleError()
 	}
 }
 
-bool DoorUXHandler::done()
+bool DoorUX::done()
 {
 	return _done;
 }
 
-void DoorUXHandler::update()
+void DoorUX::update()
 {
 	if (!init) {
 		pwr_led.mode(ON);
