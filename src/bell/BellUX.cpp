@@ -23,9 +23,9 @@
 #include <Arduino.h>
 
 #include <config.h>
-#include <bell/Bell.h>
+#include <bell/BellUX.h>
 
-Bell::Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_len) 
+BellUX::BellUX(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_len) 
 : bzr_pin(bzr_pin), led(StatusLED(led_pin)), melody_len(melody_len)
 {
         melody = new note_t[melody_len];
@@ -34,7 +34,7 @@ Bell::Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_l
         tstamp = millis();
 }
 
-bool Bell::play()
+bool BellUX::play()
 {
         bool curr_tone_init = (curr_tone > -1);
         bool t_passed = (millis() >= tstamp);
@@ -58,7 +58,7 @@ bool Bell::play()
         return true;
 }
 
-bool Bell::ring()
+bool BellUX::ring()
 {
         if (ringing)
                 return false;
@@ -68,7 +68,7 @@ bool Bell::ring()
         return true;
 }
 
-void Bell::update()
+void BellUX::update()
 {
         if (ringing)
                 ringing = play();

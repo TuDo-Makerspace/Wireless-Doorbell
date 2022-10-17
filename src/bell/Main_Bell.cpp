@@ -7,15 +7,15 @@
 #include <ring_msg.h>
 #include <StatusLED.h>
 #include <config.h>
-#include <bell/Bell.h>
+#include <bell/BellUX.h>
 #include <bell/WiFiMonitor.h>
 
 
 static IPAddress door_ip;
 static AsyncClient *door_client;
-static Bell bell = Bell(BELL_BUZZER, BELL_LED, BELL_MELODY, MELODY_LEN(BELL_MELODY));
-static StatusLED led = StatusLED(BELL_LED);
-static WiFiMonitor wifi_monitor = WiFiMonitor(BELL_LED, BELL_LED_CONNECTING_BLINK_INTERVAL);
+static BellUX bell(BELL_BUZZER, BELL_LED, BELL_MELODY, MELODY_LEN(BELL_MELODY));
+static StatusLED led(BELL_LED);
+static WiFiMonitor wifi_monitor(BELL_LED, BELL_LED_CONNECTING_BLINK_INTERVAL);
 
 static void handleError(void* arg, AsyncClient* client, int8_t error)
 {

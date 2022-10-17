@@ -26,7 +26,7 @@
 #include <StatusLED.h>
 #include <bell/melodies.h>
 
-class Bell {
+class BellUX {
         uint8_t bzr_pin;
         StatusLED led;
         int curr_tone = -1;
@@ -40,7 +40,7 @@ public:
         note_t *melody;
         size_t melody_len;
 
-        Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t len);
+        BellUX(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t len);
         bool ring();
         void update();
 };
