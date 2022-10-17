@@ -21,9 +21,9 @@
 #include <string.h>
 
 #include <Arduino.h>
-#include <Bell.h>
 
-#include "config.h"
+#include <config.h>
+#include <bell/Bell.h>
 
 Bell::Bell(uint8_t bzr_pin, uint8_t led_pin, const note_t mel[], size_t melody_len) 
 : bzr_pin(bzr_pin), led(StatusLED(led_pin)), melody_len(melody_len)

@@ -5,11 +5,11 @@
 
 #include <log.h>
 #include <ring_msg.h>
-#include <Bell.h>
 #include <StatusLED.h>
-#include <WiFiMonitor.h>
+#include <config.h>
+#include <bell/Bell.h>
+#include <bell/WiFiMonitor.h>
 
-#include "config.h"
 
 static IPAddress door_ip;
 static AsyncClient *door_client;

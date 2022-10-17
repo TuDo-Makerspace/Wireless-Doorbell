@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pitches.h>
+#include <bell/pitches.h>
 
 #define NOTE_DURATION 50 //ms
 

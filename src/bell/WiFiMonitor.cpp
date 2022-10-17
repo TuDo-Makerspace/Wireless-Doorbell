@@ -1,9 +1,8 @@
 #include <ESP8266WiFi.h>
 
-#include <WiFiMonitor.h>
 #include <log.h>
-
-#include "config.h"
+#include <config.h>
+#include <bell/WiFiMonitor.h>
 
 WiFiMonitor::WiFiMonitor(uint8_t led_pin, unsigned long con_blink_interval_ms) 
 : led(led_pin, con_blink_interval_ms) {

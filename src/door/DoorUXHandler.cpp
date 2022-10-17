@@ -1,9 +1,8 @@
 #ifdef TARGET_DEV_DOOR
 
-#include <DoorUXHandler.h>
 #include <log.h>
-
-#include "config.h"
+#include <config.h>
+#include <door/DoorUXHandler.h>
 
 DoorUXHandler::DoorUXHandler(uint8_t n_bells, uint8_t ring_led_pin, uint8_t pwr_led_pin)
 : n_bells(n_bells), bells_remaining(n_bells), ring_led(ring_led_pin), pwr_led(pwr_led_pin) {

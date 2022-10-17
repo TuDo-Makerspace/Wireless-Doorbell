@@ -23,8 +23,8 @@
 #include <stddef.h>
 #include <inttypes.h>
 
-#include <melodies.h>
 #include <StatusLED.h>
+#include <bell/melodies.h>
 
 class Bell {
         uint8_t bzr_pin;

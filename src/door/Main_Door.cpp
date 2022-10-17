@@ -6,9 +6,9 @@
 #include <log.h>
 #include <ring_msg.h>
 #include <StatusLED.h>
-#include <DoorUXHandler.h>
+#include <config.h>
+#include <door/DoorUXHandler.h>
 
-#include "config.h"
 
 #define SEARCHING_BELL 0x0
 #define BELL_FOUND 0x1

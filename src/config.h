@@ -1,6 +1,6 @@
 #pragma once
 
-#include <melodies.h>
+#include <bell/melodies.h>
 
 // WiFi
 
@@ -64,7 +64,7 @@
 #endif
 
 // Revision
-#define SW_REV "2.0.0"
+#define SW_REV "2.0.0_BETA"
 #define HW_REV "1.0.0"
 
 // Pins
