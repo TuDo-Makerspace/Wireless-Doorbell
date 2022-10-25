@@ -4,7 +4,7 @@
 
 // WiFi
 
-// #define GATEWAY "192.168.0.1"
+#define GATEWAY "192.168.0.1"
 
 #ifndef GATEWAY
 #warning No gateway specified! Assuming 192.168.0.1!
@@ -30,10 +30,10 @@
 
 #ifdef TARGET_DEV_DOOR
 
-#define N_BELLS 2
+#define DOOR_N_BELLS 1
 
-#if N_BELLS > 9
-#error N_BELLS must be less than 10!
+#if DOOR_N_BELLS > 9
+#error DOOR_N_BELLS must be less than 10!
 #endif
 
 // Pins & Peripherals
@@ -42,14 +42,17 @@
 #define DOOR_RING_LED D0
 
 // Revision
-#define SW_REV "2.0.0_BETA"
+#define SW_REV "2.1.0_BETA"
 #define HW_REV "1.0.0"
 
-#define DOOR_RING_CONFIRM_BLINK_INTERVAL NOTE_DURATION
-#define DOOR_RING_CONFIRM_BLINKS 20
+// Timeouts
+#define DOOR_CONNECT_TIMEOUT_S 20
+#define DOOR_BELL_TCP_TIMEOUT_MS 10000
+
 #define DOOR_NO_BELLS_BLINKS 3
 #define DOOR_PARTIAL_SUCCESS_BLINKS 3
 #define DOOR_NO_WIFI_BLINKS 3
+#define DOOR_CFG_INVALID_BLINKS 6
 
 #endif
 

@@ -20,17 +20,19 @@
 
 #include <inttypes.h>
 
-enum LEDMode {
-        OFF,
-        ON,
-        BLINK,
-        BLINK_INV
-};
-
 class StatusLED {
+public:
+        enum led_mode {
+                OFF,
+                ON,
+                BLINK,
+                BLINK_INV
+        };
+
+private:
         uint8_t pin;
         bool stat;
-        LEDMode mod;
+        led_mode mod;
         unsigned long blink_interval;
         unsigned long tstamp;
         unsigned int blks;
@@ -38,8 +40,8 @@ public:
         StatusLED();
         StatusLED(uint8_t pin, unsigned long blink_interval = 500);
         void setBlinkInterval(unsigned long interval);
-        void mode(LEDMode m);
-        LEDMode getMode();
+        void mode(led_mode m);
+        led_mode getMode();
         void update();
         unsigned int blinks();
 };

@@ -13,20 +13,20 @@ void WiFiMonitor::onConnect()
 	log_msg("WiFiMonitor::onConnect", "Connected to " + String(WIFI_SSID));
 	log_msg("WiFiMonitor::onConnect", "IP address: " + WiFi.localIP().toString());
 
-	led.mode(OFF);
+	led.mode(StatusLED::OFF);
 	led.update();
 }
 
 void WiFiMonitor::onDisconnect()
 {
 	log_msg("WiFiMonitor::onDisconnect", "Lost connection to " + String(WIFI_SSID) + ", attempting to reconnect...");
-	led.mode(BLINK);
+	led.mode(StatusLED::BLINK);
 }
 
 void WiFiMonitor::onInit()
 {
 	log_msg("WiFiMonitor::onInit", "Attempting to establish connection with " + String(WIFI_SSID));
-	led.mode(BLINK);
+	led.mode(StatusLED::BLINK);
 }
 
 void WiFiMonitor::update()

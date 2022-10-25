@@ -17,10 +17,17 @@
  */
 
 #include <Arduino.h>
+
+#include <log.h>
 #include <StatusLED.h>
+
+StatusLED::StatusLED()
+{
+}
 
 StatusLED::StatusLED(uint8_t pin, unsigned long blink_interval_ms) : pin(pin)
 {
+        log_msg("StatusLED::StatusLED", "Initializing StatusLED on pin " + String(pin));
         pinMode(pin, OUTPUT);
         setBlinkInterval(blink_interval_ms);
         mode(OFF);
@@ -31,22 +38,26 @@ void StatusLED::setBlinkInterval(unsigned long interval)
         blink_interval = interval;
 }
 
-void StatusLED::mode(LEDMode m) {
+void StatusLED::mode(led_mode m) {
         switch(m) {
         case OFF:
+                log_msg("StatusLED(PIN:" + String(pin) + ")::mode", "Setting mode to OFF");
                 stat = LOW;
                 break;
 
         case ON:
+                log_msg("StatusLED(PIN:" + String(pin) + ")::mode", "Setting mode to ON");
                 stat = HIGH;
                 break;
 
         case BLINK:
+                log_msg("StatusLED(PIN:" + String(pin) + ")::mode", "Setting mode to BLINK");
                 stat = HIGH;
                 tstamp = millis() + blink_interval;
                 break;
 
         case BLINK_INV:
+                log_msg("StatusLED(PIN:" + String(pin) + ")::mode", "Setting mode to BLINK_INV");
                 stat = LOW;
                 tstamp = millis() + blink_interval;
                 m = BLINK;
@@ -61,7 +72,7 @@ void StatusLED::mode(LEDMode m) {
         blks = 0;
 }
 
-LEDMode StatusLED::getMode()
+StatusLED::led_mode StatusLED::getMode()
 {
         return mod;
 }
