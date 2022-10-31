@@ -31,6 +31,16 @@ bool DoorCFG::checkValidity()
 		ret = false;
 	}
 
+	if (gateway == "") {
+		log_msg("DoorCFG::valid", "No gateway specified in cfg!");
+		ret = false;
+	}
+
+	if (subnet == "") {
+		log_msg("DoorCFG::valid", "No subnet specified in cfg!");
+		ret = false;
+	}
+
 	if (port == 0) {
 		log_msg("DoorCFG::valid", "No port specified in cfg!");
 		ret = false;

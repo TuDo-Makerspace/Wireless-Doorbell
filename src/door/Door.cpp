@@ -1,7 +1,6 @@
 #include <config.h>
 
 #include <log.h>
-
 #include <StatusLED.h>
 
 #include <door/Door.h>
