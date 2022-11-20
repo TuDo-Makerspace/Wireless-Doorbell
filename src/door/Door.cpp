@@ -20,8 +20,8 @@ Door::Door(DoorCFG door_cfg) : cfg(door_cfg)
 	log_msg("Door::Door", "Initializing door");
 
 	if (!cfg.checkValidity()) {
-		if (cfg.ring_led_pin != -1 ||
-		    cfg.power_led_pin != -1) {
+		if (cfg.ring_led_pin == -1 ||
+		    cfg.power_led_pin == -1) {
 			log_msg("Door", "Status LEDs uninitialized, entering fallback error mode");
 			FALLBACK_ERROR(); // Unlatches power after completion	
 		}
