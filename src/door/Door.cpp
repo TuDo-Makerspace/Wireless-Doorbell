@@ -53,25 +53,25 @@ Door::Door(DoorCFG door_cfg) : cfg(door_cfg)
 
 void Door::bootMSG()
 {
-        log_msg("Door::bootMSG", "---------------------------------------------------------------------------");
-        log_msg("Door::bootMSG", "___       __   __"); 
-        log_msg("Door::bootMSG", " |  |  | |  \\ /  \\");
-        log_msg("Door::bootMSG", " |  \\__/ |__/ \\__/");                
-        log_msg("Door::bootMSG", "");                                     
-        log_msg("Door::bootMSG", " __   __   __   __   __   ___");     
-        log_msg("Door::bootMSG", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
-        log_msg("Door::bootMSG", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
-        log_msg("Door::bootMSG", "");
-        log_msg("Door::bootMSG", "Author:\t\t\tPatrick Pedersen");
-        log_msg("Door::bootMSG", "License:\t\t\tGPLv3");
-        log_msg("Door::bootMSG", "Build date:\t\t" + String(__DATE__));
-        log_msg("Door::bootMSG", "Software Revision:\t" + String(SW_REV) + "_DOOR");
-        log_msg("Door::bootMSG", "Hardware Revision:\t" + String(HW_REV) + "_DOOR");
-        log_msg("Door::bootMSG", "Source code:\t\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
-        log_msg("Door::bootMSG", "Device type:\t\tDoor");
-        log_msg("Door::bootMSG", "Targeted SSID:\t\t" + String(WIFI_SSID));
-        log_msg("Door::bootMSG", "---------------------------------------------------------------------------");
-        log_msg("Door::bootMSG", "");
+	log_msg("Door::bootMSG", "---------------------------------------------------------------------------");
+	log_msg("Door::bootMSG", "___       __   __"); 
+	log_msg("Door::bootMSG", " |  |  | |  \\ /  \\");
+	log_msg("Door::bootMSG", " |  \\__/ |__/ \\__/");                
+	log_msg("Door::bootMSG", "");                                     
+	log_msg("Door::bootMSG", " __   __   __   __   __   ___");     
+	log_msg("Door::bootMSG", "|  \\ /  \\ /  \\ |__) |__) |__  |    |");
+	log_msg("Door::bootMSG", "|__/ \\__/ \\__/ |  \\ |__) |___ |___ |___");
+	log_msg("Door::bootMSG", "");
+	log_msg("Door::bootMSG", "Author:\t\t\tPatrick Pedersen");
+	log_msg("Door::bootMSG", "License:\t\t\tGPLv3");
+	log_msg("Door::bootMSG", "Build date:\t\t" + String(__DATE__));
+	log_msg("Door::bootMSG", "Software Revision:\t" + String(SW_REV) + "_DOOR");
+	log_msg("Door::bootMSG", "Hardware Revision:\t" + String(HW_REV) + "_DOOR");
+	log_msg("Door::bootMSG", "Source code:\t\thttps://github.com/TU-DO-Makerspace/Wireless-Doorbell");
+	log_msg("Door::bootMSG", "Device type:\t\tDoor");
+	log_msg("Door::bootMSG", "Targeted SSID:\t\t" + String(WIFI_SSID));
+	log_msg("Door::bootMSG", "---------------------------------------------------------------------------");
+	log_msg("Door::bootMSG", "");
 }
 
 Door::door_state Door::init()
@@ -87,10 +87,8 @@ Door::door_state Door::connecting()
 	wifi_handler.update();
 	
 	switch (wifi_handler.status()) {
-		case WiFiHandler::CONNECTING:
-			return CONNECTING;
-		case WiFiHandler::CONNECTED:
-			return CONNECTED;
+		case WiFiHandler::CONNECTING: return CONNECTING;
+		case WiFiHandler::CONNECTED:  return CONNECTED;
 		default:
 			err = NO_WIFI;
 			return ERROR;
@@ -221,44 +219,14 @@ Door::door_state Door::power_off()
 void Door::run()
 {
 	switch (state) {
-		case INIT: {
-			state = init();
-			break;
-		} 
-		
-		case CONNECTING: {
-			state = connecting();
-			break;
-		}
-	
-		case CONNECTED: {
-			state = connected();
-			break;
-		}
-
-		case RINGING: {
-			state = ringing();
-			break;
-		}
-		
-		case ERROR: {
-			state = error();
-			break;
-		}
-
-		case ERROR_HANDLING: {
-			state = error_handling();
-			break;
-		}
-		
-		case POWER_OFF: {
-			state = power_off();
-			break;
-		}
-
-		case POWERED_OFF: {
-			break;
-		}
+		case INIT:		state = init(); 		break;
+		case CONNECTING:	state = connecting();		break;
+		case CONNECTED:		state = connected();		break;
+		case RINGING:		state = ringing();		break;
+		case ERROR:		state = error();		break;
+		case ERROR_HANDLING:	state = error_handling();	break;
+		case POWER_OFF:		state = power_off();		break;
+		case POWERED_OFF:					break;
 	}
 
 	pwr_led.update();
