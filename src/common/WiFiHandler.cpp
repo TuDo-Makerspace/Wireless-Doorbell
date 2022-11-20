@@ -8,10 +8,10 @@ WiFiHandler::WiFiHandler()
 
 WiFiHandler::WiFiHandler(const String ssid, const String psk, 
 			 const IPAddress ip, const IPAddress gateway, const IPAddress subnet,
-			 const uint16_t timeout_s)
+			 const uint16_t timeout_s, const bool rejoin)
 : ssid(ssid), psk(psk), 
   ip(ip), gateway(gateway), 
-  subnet(subnet), timeout_ms(timeout_s * 1000)
+  subnet(subnet), timeout_ms(timeout_s * 1000), rejoin(rejoin)
 {
 	log_msg("WiFiHandler::WiFiHandler", "Initializing WiFiHandler");
 	stat = DISCONNECTED;
@@ -45,6 +45,16 @@ void WiFiHandler::connect()
 	}
 }
 
+void WiFiHandler::unexpected_disconnect()
+{
+	if (!rejoin) {
+		disconnect();
+		return;
+	}
+
+	log_msg("WiFiHandler::unexpected_disconnect", "Attempting to reconnect to: " + ssid);
+}
+
 void WiFiHandler::disconnect()
 {
 	WiFi.disconnect();
@@ -70,6 +80,8 @@ void WiFiHandler::update()
 
 				if (WiFi.localIP() != ip) {
 					log_msg("WiFiHandler::update", "IP address mismatch, attempting to reconnect");
+					
+					// Requires "hard" reconnect
 					disconnect();
 					_connect();
 				}
@@ -80,7 +92,7 @@ void WiFiHandler::update()
 			else if (timeout()) {
 				log_msg("WiFiHandler::update", "Timeout after " + String(timeout_ms) + "ms!");
 				log_msg("WiFiHandler::update", "Failed to establish a successful connection to: " + ssid);
-				disconnect();
+				unexpected_disconnect();
 			}
 			break;
 		}
@@ -88,12 +100,18 @@ void WiFiHandler::update()
 		case CONNECTED: {
 			if (WiFi.status() != WL_CONNECTED) {
 				log_msg("WiFiHandler::update", "Lost connection to: " + ssid);
-				disconnect();
+				unexpected_disconnect();
 			}
 			break;
 		}
 		
 		case DISCONNECTED:
+			if (WiFi.status() == WL_CONNECTED) {
+				log_msg("WiFiHandler::update", "Re-established connection to: " + ssid);
+				stat = CONNECTED;
+			}
+			break;
+			
 		default: {
 			break;
 		}

@@ -18,6 +18,7 @@ private:
 	IPAddress gateway;
 	IPAddress subnet;
 	uint16_t timeout_ms;
+	bool rejoin;
 
 	wifi_stat stat = DISCONNECTED;
 	unsigned long timeout_tstamp;
@@ -25,11 +26,13 @@ private:
 	bool timeout();
 	void _connect();
 	
+	void unexpected_disconnect();
+
 public:
 	WiFiHandler();
 	WiFiHandler(const String ssid, const String psk, 
 		    const IPAddress ip, const IPAddress gateway, const IPAddress subnet,
-		    const uint16_t timeout_s);
+		    const uint16_t timeout_s, const bool rejoin = true);
 
 	void connect();
 	void disconnect();
