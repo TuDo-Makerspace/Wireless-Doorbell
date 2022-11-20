@@ -1,3 +1,5 @@
+#ifdef TARGET_DEV_DOOR
+
 #include <log.h>
 #include <ring_msg.h>
 
@@ -89,3 +91,5 @@ RingTX::ring_stat RingTX::status()
 {
 	return stat;
 }
+
+#endif

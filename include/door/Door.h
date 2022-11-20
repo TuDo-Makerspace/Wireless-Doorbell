@@ -21,9 +21,9 @@ class Door {
 	};
 
 	enum error_type {
+		NO_ERROR,
 		UNINITIALIZED,
 		CFG_INVALID,
-		NO_ERROR,
 		NO_WIFI,
 		PARTIAL_SUCCESS,
 		FAIL,

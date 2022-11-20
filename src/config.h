@@ -67,7 +67,7 @@
 #endif
 
 // Revision
-#define SW_REV "2.0.0_BETA"
+#define SW_REV "2.1.0_BETA"
 #define HW_REV "1.0.0"
 
 // Pins

@@ -4,7 +4,7 @@
 
 #define NOTE_DURATION 50 //ms
 
-const note_t DEFAULT_CHIME[] = {
+static const note_t DEFAULT_CHIME[] = {
         NOTE_D7, NOTE_FS7, NOTE_A7,
         NOTE_D7, NOTE_FS7, NOTE_A7,
         NOTE_D7, NOTE_FS7, NOTE_A7,
@@ -16,13 +16,13 @@ const note_t DEFAULT_CHIME[] = {
         NOTE_D7, NOTE_FS7, NOTE_A7
 };
 
-const note_t DEBUG_CHIME[] = {
+static const note_t DEBUG_CHIME[] = {
         NOTE_A4, NOTE_A4, NOTE_A4,
         NOTE_PAUSE, NOTE_PAUSE, NOTE_PAUSE,
         NOTE_A4, NOTE_A4, NOTE_A4
 };
 
-const note_t MEGALOVANIA[] = {
+static const note_t MEGALOVANIA[] = {
         NOTE_D7, NOTE_D7, NOTE_D7, NOTE_PAUSE,
         NOTE_D7, NOTE_D7, NOTE_D7, NOTE_PAUSE,
         NOTE_D8, NOTE_D8, NOTE_D8, NOTE_D8,

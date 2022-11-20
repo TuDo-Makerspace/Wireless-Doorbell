@@ -1,3 +1,5 @@
+#ifdef TARGET_DEV_DOOR
+
 #include <log.h>
 
 #include <door/DoorCFG.h>
@@ -48,3 +50,5 @@ bool DoorCFG::checkValidity()
 
 	return ret;
 }
+
+#endif

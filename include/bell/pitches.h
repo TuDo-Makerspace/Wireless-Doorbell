@@ -10,6 +10,7 @@ typedef uint16_t note_t;
  * Public Constants
  *************************************************/
 
+#define NOTE_OFF    0
 #define NOTE_PAUSE  0
 #define NOTE_B0     31
 #define NOTE_C1     33

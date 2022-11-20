@@ -1,3 +1,5 @@
+#ifdef TARGET_DEV_DOOR
+
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
@@ -122,3 +124,5 @@ RingSender::ring_stat RingSender::status()
 {
 	return stat;
 }
+
+#endif

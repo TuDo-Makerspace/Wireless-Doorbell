@@ -1,3 +1,5 @@
+#ifdef TARGET_DEV_DOOR
+
 #include <config.h>
 
 #include <log.h>
@@ -40,7 +42,7 @@ Door::Door(DoorCFG door_cfg) : cfg(door_cfg)
 	wifi_handler = WiFiHandler(
 		cfg.ssid, cfg.psk,
 		ip, gateway, subnet,
-		cfg.con_timeout_s
+		cfg.con_timeout_s, false
 	);
 	
 	ring_sender = RingSender(ip, cfg.port, cfg.n_bells, cfg.bell_timeout_ms);
@@ -262,3 +264,5 @@ void Door::run()
 	pwr_led.update();
 	ring_led.update();
 }
+
+#endif
