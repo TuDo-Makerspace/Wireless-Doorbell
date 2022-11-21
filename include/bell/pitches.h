@@ -1,4 +1,4 @@
-// https://gist.github.com/mikeputnam/2820675
+// Credits: https://gist.github.com/mikeputnam/2820675
 
 #pragma once
 
