@@ -101,9 +101,7 @@ Door::door_state Door::init()
 }
 
 Door::door_state Door::connecting()
-{
-	wifi_handler.update();
-	
+{	
 	switch (wifi_handler.status()) {
 		case WiFiHandler::CONNECTING: return CONNECTING;
 		case WiFiHandler::CONNECTED:  return CONNECTED;
@@ -120,9 +118,7 @@ Door::door_state Door::connected()
 }
 
 Door::door_state Door::ringing()
-{
-	ring_sender.update();
-	
+{	
 	switch (ring_sender.status()) {
 		case RingSender::SENDING: {
 			if (ring_sender.acks() > 0 && 
@@ -247,6 +243,8 @@ void Door::run()
 		case POWERED_OFF:					break;
 	}
 
+	wifi_handler.update();
+	ring_sender.update();
 	pwr_led.update();
 	ring_led.update();
 }
