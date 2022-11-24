@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,17 @@
  * 
  */
 
+/**
+ * @file Door.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Door class implementation
+ * 
+ * The following file contains the implementation of the Door class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_DOOR
 
 #include <config.h>
@@ -27,12 +38,14 @@
 #include <door/fallback_error.h>
 #include <door/power_latch.h>
 
+// Refer to header for documentation
 Door::Door()
 {
 	err = UNINITIALIZED;
 	state = ERROR;
 }
 
+// Refer to header for documentation
 Door::Door(DoorCFG door_cfg) : cfg(door_cfg)
 {	
 	log_msg("Door::Door", "Initializing door");
@@ -65,10 +78,10 @@ Door::Door(DoorCFG door_cfg) : cfg(door_cfg)
 	
 	ring_sender = RingSender(ip, cfg.port, cfg.n_bells, cfg.bell_timeout_ms);
 
-	err = NO_ERROR;
 	state = INIT;
 }
 
+// Refer to header for documentation
 void Door::bootMSG()
 {
 	log_msg("Door::bootMSG", "---------------------------------------------------------------------------");
@@ -92,6 +105,7 @@ void Door::bootMSG()
 	log_msg("Door::bootMSG", "");
 }
 
+// Refer to header for documentation
 Door::door_state Door::init()
 {
 	bootMSG();
@@ -100,6 +114,7 @@ Door::door_state Door::init()
 	return CONNECTING;
 }
 
+// Refer to header for documentation
 Door::door_state Door::connecting()
 {	
 	switch (wifi_handler.status()) {
@@ -111,12 +126,14 @@ Door::door_state Door::connecting()
 	}
 }
 
+// Refer to header for documentation
 Door::door_state Door::connected()
 {
 	ring_sender.send();
 	return RINGING;
 }
 
+// Refer to header for documentation
 Door::door_state Door::ringing()
 {	
 	switch (ring_sender.status()) {
@@ -146,6 +163,7 @@ Door::door_state Door::ringing()
 	}
 }
 
+// Refer to header for documentation
 Door::door_state Door::error()
 {
 	switch (err) {
@@ -169,7 +187,6 @@ Door::door_state Door::error()
 			ring_led.mode(StatusLED::BLINK);
 			break;
 		case FAIL:
-		default:
 			log_msg("Door::error", "Failed to contact bells!");
 			pwr_led.mode(StatusLED::BLINK);
 			break;
@@ -178,6 +195,7 @@ Door::door_state Door::error()
 	return ERROR_HANDLING;
 }
 
+// Refer to header for documentation
 Door::door_state Door::error_handling()
 {
 	switch(err) {
@@ -219,6 +237,7 @@ Door::door_state Door::error_handling()
 	return ERROR_HANDLING;
 }
 
+// Refer to header for documentation
 Door::door_state Door::power_off()
 {
 	log_msg("Door::power_off", "Unlatching power, shutting down...");
@@ -230,6 +249,7 @@ Door::door_state Door::power_off()
 	return POWERED_OFF;
 }
 
+// Refer to header for documentation
 void Door::run()
 {
 	switch (state) {

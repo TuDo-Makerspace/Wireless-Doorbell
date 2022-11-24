@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, Kacper Swonkowski, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
+ */
+
+/**
+ * @file melodies.h
+ * @author Patrick Pedersen, Kacper Swonkowski, TU-DO Makerspace
+ * @brief Contains all ring tone melodies
  */
 
 #pragma once

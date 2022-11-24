@@ -16,14 +16,27 @@
  * 
  */
 
+/**
+ * @file WiFiHandler.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief WiFiHandler class implementation
+ * 
+ * The following file contains the implementation of the WiFiHandler class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #include <log.h>
 #include <WiFiHandler.h>
 
+// Refer to header for documentation
 WiFiHandler::WiFiHandler()
 {
 	stat = UNINITIALIZED;
 }
 
+// Refer to header for documentation
 WiFiHandler::WiFiHandler(const String ssid, const String psk, 
 			 const IPAddress ip, const IPAddress gateway, const IPAddress subnet,
 			 const uint16_t timeout_s, const bool rejoin)
@@ -35,6 +48,7 @@ WiFiHandler::WiFiHandler(const String ssid, const String psk,
 	stat = DISCONNECTED;
 }
 
+// Refer to header for documentation
 void WiFiHandler::_connect()
 {
 	if (stat == UNINITIALIZED) {
@@ -55,6 +69,7 @@ void WiFiHandler::_connect()
 	stat = CONNECTING;
 }
 
+// Refer to header for documentation
 void WiFiHandler::connect()
 {
 	_connect();
@@ -63,32 +78,44 @@ void WiFiHandler::connect()
 	}
 }
 
+// Refer to header for documentation
 void WiFiHandler::unexpected_disconnect()
 {
 	if (!rejoin) {
+		// If rejoin isn't enabled, treat as intentional disconnect
 		disconnect();
 		return;
 	}
 
+	// The ESP8266WiFiClass will automatically reconnect
+	// if WiFi.disconnect() has not been called
+
+	stat = DISCONNECTED;
+	
 	log_msg("WiFiHandler::unexpected_disconnect", "Attempting to reconnect to: " + ssid);
 }
 
+// Refer to header for documentation
 void WiFiHandler::disconnect()
 {
+	// disconnect() method of WiFi class will ensure
+	// it no longer attempt to automatically re-connect
 	WiFi.disconnect();
 	stat = DISCONNECTED;
 
 	log_msg("WiFiHandler::disconnect", "Disconnected from: " + ssid);
 }
 
+// Refer to header for documentation
 bool WiFiHandler::timeout()
 {
-	if (timeout_ms == 0)
+	if (timeout_ms == NO_TIMEOUT)
 		return false;
 
 	return millis() >= timeout_tstamp;
 }
 
+// Refer to header for documentation
 void WiFiHandler::update()
 {
 	switch(stat) {
@@ -110,7 +137,7 @@ void WiFiHandler::update()
 			else if (timeout()) {
 				log_msg("WiFiHandler::update", "Timeout after " + String(timeout_ms) + "ms!");
 				log_msg("WiFiHandler::update", "Failed to establish a successful connection to: " + ssid);
-				unexpected_disconnect();
+				disconnect();
 			}
 			break;
 		}
@@ -136,6 +163,7 @@ void WiFiHandler::update()
 	}
 }
 
+// Refer to header for documentation
 WiFiHandler::wifi_stat WiFiHandler::status()
 {
 	return stat;

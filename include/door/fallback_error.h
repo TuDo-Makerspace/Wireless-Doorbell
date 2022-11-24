@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,12 @@
  * 
  */
 
+/**
+ * @file fallback_errror.h
+ * @author Patrick Pedersen, TU-DO Makerspace
+ * @brief fallback_errror for the Door firmware
+ */
+
 #pragma once
 
 #include <ESP8266WiFi.h>
@@ -24,6 +30,19 @@
 
 #include <door/power_latch.h>
 
+/**
+ * @brief Door Fallback error
+ * 
+ * The following function is called when the Door class
+ * encounters an error and has no possibility to display
+ * it to the user via the LEDs (eg. no LEDs pin provided
+ * in the class configuration).
+ * 
+ * The fallback error has direct access to the LEDs, and 
+ * will blink each LED twice in a row. Once complete, the
+ * device is powered off.
+ * 
+ */
 inline void FALLBACK_ERROR()
 {
 	log_msg("FALLBACK_ERROR", "Entered fallback error mode, something went horribly wrong!");

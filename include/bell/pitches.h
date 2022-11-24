@@ -1,5 +1,11 @@
 // Credits: https://gist.github.com/mikeputnam/2820675
 
+/**
+ * @file pitches.h
+ * @author Patrick Pedersen
+ * @brief Macros for playing musical notes on the buzzer
+ */
+
 #pragma once
 
 #include <inttypes.h>

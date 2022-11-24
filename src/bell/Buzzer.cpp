@@ -16,6 +16,17 @@
  * 
  */
 
+/**
+ * @file Buzzer.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Buzzer class implementation
+ * 
+ * The following file contains the implementation of the Buzzer class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_BELL
 
 #include <Arduino.h>
@@ -25,19 +36,30 @@
 
 #include <bell/Buzzer.h>
 
+// Refer to header for documentation
 Buzzer::Buzzer()
 {
 	stat = UNINITIALIZED;
 }
 
+// Refer to header for documentation
 Buzzer::Buzzer(uint8_t pin, const note_t mel[], size_t melody_len) : pin(pin), melody_len(melody_len)
 {
+	// Melody array is a const, so we need to copy it to a non-const array
+	// if we wish to read it from within the class.
+	// We can theoretically afford to just work unsafe here, since
+	// we will only ever read from the melody array, let alone
+	// never use more than one Buzzer. However, since we still have
+	// plenty of memory, we might as well just do it the "right way".
+
 	melody = new note_t[melody_len];
         memcpy(melody, mel, melody_len * sizeof(note_t));
+
 	pinMode(pin, OUTPUT);
 	stat = IDLE;
 }
 
+// Refer to header for documentation
 void Buzzer::ring()
 {
 	if (stat == UNINITIALIZED) {
@@ -57,11 +79,13 @@ void Buzzer::ring()
 	stat = RINGING;
 }
 
+// Refer to header for documentation
 bool Buzzer::ringing()
 {
 	return stat == RINGING;
 }
 
+// Refer to header for documentation
 void Buzzer::update()
 {
 	if (stat != RINGING)

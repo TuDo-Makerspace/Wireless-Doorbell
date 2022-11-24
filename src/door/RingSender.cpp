@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,17 @@
  * 
  */
 
+/**
+ * @file RingSender.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief RingSender class implementation
+ * 
+ * The following file contains the implementation of the RingSender class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_DOOR
 
 #include <Arduino.h>
@@ -24,11 +35,13 @@
 #include <log.h>
 #include <door/RingSender.h>
 
+// Refer to header for documentation
 RingSender::RingSender()
 {
 	stat = UNINITIALIZED;
 }
 
+// Refer to header for documentation
 RingSender::RingSender(IPAddress door_ip, unsigned int port, uint8_t n_bells, unsigned long timeout_ms)
 : n_bells(n_bells)
 {
@@ -47,6 +60,7 @@ RingSender::RingSender(IPAddress door_ip, unsigned int port, uint8_t n_bells, un
 	stat = AWAITING;
 }
 
+// Refer to header for documentation
 RingSender::~RingSender()
 {
 	if (stat == UNINITIALIZED)
@@ -55,6 +69,7 @@ RingSender::~RingSender()
 	delete[] tx;
 }
 
+// Refer to header for documentation
 RingSender& RingSender::operator=(const RingSender& other)
 {
 	if (this == &other)
@@ -70,6 +85,7 @@ RingSender& RingSender::operator=(const RingSender& other)
 	return *this;
 }
 
+// Refer to header for documentation
 uint8_t RingSender::acks() {
 	uint8_t ret = 0;
 	for (int i = 0; i < n_bells; i++) {
@@ -80,6 +96,7 @@ uint8_t RingSender::acks() {
 	return ret;
 }
 
+// Refer to header for documentation
 uint8_t RingSender::fails() {
 	uint8_t ret = 0;
 	for (int i = 0; i < n_bells; i++) {
@@ -90,6 +107,7 @@ uint8_t RingSender::fails() {
 	return ret;
 }
 
+// Refer to header for documentation
 void RingSender::send()
 {
 	if (stat == UNINITIALIZED) {
@@ -106,6 +124,7 @@ void RingSender::send()
 	stat = SENDING;
 }
 
+// Refer to header for documentation
 void RingSender::update()
 {
 	if (stat != SENDING)
@@ -138,6 +157,7 @@ void RingSender::update()
 	}
 }
 
+// Refer to header for documentation
 RingSender::ring_stat RingSender::status()
 {
 	return stat;

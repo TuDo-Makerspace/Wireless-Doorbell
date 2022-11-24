@@ -16,12 +16,24 @@
  * 
  */
 
+/**
+ * @file BellCFG.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief BellCFG class implementation
+ * 
+ * The following file contains the implementation of the BellCFG class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_BELL
 
 #include <log.h>
 
 #include <bell/Bell.h>
 
+// Refer to header for documentation
 bool BellCFG::checkValidity()
 {
 	bool ret = true;

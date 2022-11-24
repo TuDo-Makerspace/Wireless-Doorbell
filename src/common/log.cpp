@@ -16,8 +16,19 @@
  * 
  */
 
+/**
+ * @file log.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Implements functions for logging
+ * 
+ * The following file implements functions for logging.
+ * For more information, see the header file.
+ * 
+ */
 #include <log.h>
 
+// Refer to header for documentation
 void log_msg(String category, String message)
 {
         Serial.println("[" + String(millis())+ "]\t\t" + category + ": " + message);

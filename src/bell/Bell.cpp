@@ -16,6 +16,17 @@
  * 
  */
 
+/**
+ * @file Bell.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Bell class implementation
+ * 
+ * The following file contains the implementation of the Bell class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_BELL
 
 #include <config.h>
@@ -26,18 +37,22 @@
 #include <bell/fallback_error.h>
 #include <bell/Bell.h>
 
+// Refer to header for documentation
 Bell::Bell()
 {
 	err = UNINITIALIZED;
 	state = ERROR;
 }
 
+// Refer to header for documentation
 Bell::Bell(BellCFG bell_cfg) : cfg(bell_cfg)
 {
 	log_msg("Bell::Bell", "Initializing bell");
 
 	if (!cfg.checkValidity()) {
 		if (cfg.led_pin == -1) {
+			 // We can't display error codes if LED pin isn't initialized!
+			 // Resort to a fallback error!
 			log_msg("Bell::Bell", "LED indicator uninitialized, entering fallback error mode");
 			FALLBACK_ERROR(); // Enters infinite loop
 		}
@@ -63,10 +78,10 @@ Bell::Bell(BellCFG bell_cfg) : cfg(bell_cfg)
 
 	ring_receiver = RingReceiver::get_instance();
 
-	err = NO_ERROR;
 	state = INIT;
 }
 
+// Refer to header for documentation
 void Bell::bootMSG()
 {
 	log_msg("Bell::bootMSG", "---------------------------------------------------------------------------");
@@ -90,6 +105,7 @@ void Bell::bootMSG()
 	log_msg("Bell::bootMSG", "");
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::init()
 {
 	bootMSG();
@@ -98,6 +114,7 @@ Bell::bell_state Bell::init()
 	return DISCONNECTED;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::disconnected()
 {
 	led.mode(StatusLED::BLINK);
@@ -105,6 +122,7 @@ Bell::bell_state Bell::disconnected()
 	return CONNECTING;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::connecting()
 {
 	if (wifi_handler.status() == WiFiHandler::CONNECTED) {
@@ -115,8 +133,12 @@ Bell::bell_state Bell::connecting()
 	return CONNECTING;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::connected()
 {
+	// Calling received() will reset the return value
+	// to false after each call. That way we don't  keep 
+	// entering this condition when a ring has been received.
 	if (ring_receiver->received()) {
 		led.mode(StatusLED::ON);
 		buzzer.ring();
@@ -129,6 +151,7 @@ Bell::bell_state Bell::connected()
 	return CONNECTED;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::ringing()
 {
 	if (!buzzer.ringing()) {
@@ -139,10 +162,16 @@ Bell::bell_state Bell::ringing()
 	return RINGING;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::error()
 {
 	switch (err) {
 		case UNINITIALIZED: {
+			// update() method called on object that hasn't been 
+			// properly initialized/configured. This can occur if 
+			// the object is only initialized with the default constructor.
+			// Since no LED pin is initialized, we can't display error codes
+			// and must resort to a fallback error.
 			log_msg("Bell::error", "Bell not initialized!");
 			FALLBACK_ERROR(); // Enters infinite loop
 			break;
@@ -153,26 +182,27 @@ Bell::bell_state Bell::error()
 			led.mode(StatusLED::BLINK);
 			break;
 		}
-		default: {
-			log_msg("Bell::error", "Unhandled error received:" + String(err));
-		}
 	}
 
 	return ERROR_HANDLING;
 }
 
+// Refer to header for documentation
 Bell::bell_state Bell::error_handling()
 {
 	switch(err) {
-		case CFG_INVALID: break;
-		default: break;
+		case UNINITIALIZED: 	break;	// This should never occur but keeps the compiler happy
+		case CFG_INVALID: 	break;	// Blinks led, nothing to handle (taken care of by StatusLED.update())
 	}
 
 	return ERROR_HANDLING;
 }
 
+// Refer to header for documentation
 void Bell::run()
 {
+	// The main state machine
+	// Transitions are handled through return values of each state function
 	switch (state) {
 		case INIT:              state = init();                 break;
 		case DISCONNECTED:      state = disconnected();         break;
@@ -183,6 +213,7 @@ void Bell::run()
 		case ERROR_HANDLING:    state = error_handling();       break;
 	}
 
+	// Update asynchronus components here
 	wifi_handler.update();
 	buzzer.update();
 	led.update();

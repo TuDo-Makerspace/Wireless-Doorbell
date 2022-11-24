@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,18 @@
 
 #include <WString.h>
 
+/**
+ * @file DoorCFG.h
+ * @author Patrick Pedersen, TU-DO Makerspace
+ * @brief DoorCFG class
+ */
+
+/**
+ * @brief The DoorCFG class.
+ * 
+ * The DoorCFG class is used to configure a Bell class instance and
+ * provides a function to check its validity (see checkValidity()).
+ */
 class DoorCFG {
 public:
 	int16_t ring_led_pin = -1;

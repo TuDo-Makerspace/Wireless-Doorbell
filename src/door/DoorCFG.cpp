@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,24 @@
  * 
  */
 
+/**
+ * @file DoorCFG.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief DoorCFG class implementation
+ * 
+ * The following file contains the implementation of the DoorCFG class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_DOOR
 
 #include <log.h>
 
 #include <door/DoorCFG.h>
 
+// Refer to header for documentation
 bool DoorCFG::checkValidity()
 {
 	bool ret = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,22 @@
  * 
  */
 
+/**
+ * @file BellCFG.h
+ * @author Patrick Pedersen, TU-DO Makerspace
+ * @brief BellCFG class
+ */
+
 #pragma once
 
 #include <WString.h>
 
+/**
+ * @brief The BellCFG class.
+ * 
+ * The BellCFG class is used to configure a Bell class instance and
+ * provides a function to check its validity (see checkValidity()).
+ */
 class BellCFG {
 public:
 	int16_t buzzer_pin = -1;
@@ -32,5 +44,15 @@ public:
 	String subnet = "";
 	uint16_t port = 0;
 
+	/**
+	 * @brief Checks if the configuration is valid
+	 * 
+	 * The following function checks if the configuration is valid.
+	 * If one of the required fields is not set, or set improperly, the
+	 * function returns false.
+	 * 
+	 * @returns true If the configuration is valid,
+	 * 	    false If the configuration is invalid
+	 */
 	bool checkValidity();
 };

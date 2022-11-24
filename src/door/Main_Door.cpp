@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,20 @@
  * 
  */
 
+/**
+ * @file Main_Door.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Main file for the door firmware.
+ * 
+ * The following file contains the setup and loop function for the door firmware.
+ * In the setup function, the power is latched using the P-MOS power latch
+ * circuit. After the power has been latched, a Door object is created 
+ * and initialized through a DoorCFG object. The run() method of the Door
+ * object is then called continuously in the loop function to run the firmware.
+ * 
+ */
+
 #ifdef TARGET_DEV_DOOR
 
 #include <config.h>
@@ -29,12 +43,18 @@ Door door;
 
 void setup()
 {
+	// Latch power ASAP before capacitor charges to P-MOSES threshold voltage
 	LATCH_POWER();
+
+	// Phew, we're safe here, now to the rest of the firmware
 
 	Serial.begin(115200);
 
 	log_msg("setup", "Power latched!");
 
+	// Configure door using the DoorCFG object
+	// Most parameters are set in the config.h file
+	
 	DoorCFG cfg;
 
 	cfg.ring_led_pin 	= DOOR_RING_LED;

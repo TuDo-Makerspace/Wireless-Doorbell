@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,12 @@
  * 
  */
 
+/**
+ * @file fallback_errror.h
+ * @author Patrick Pedersen, TU-DO Makerspace
+ * @brief fallback_errror for the Bell firmware
+ */
+
 #pragma once
 
 #include <Arduino.h>
@@ -23,6 +29,20 @@
 #include <log.h>
 #include <config.h>
 
+/**
+ * @brief Bell Fallback error
+ * 
+ * The following function is called when the Bell class
+ * encounters an error and has no possibility to display
+ * it to the user via the LED (eg. no LED pin provided in
+ * the class configuration).
+ * 
+ * The fallback error has direct access to the LED and
+ * buzzer pins, and will blink the LED and play a A4
+ * tone on the buzzer indefinitely.
+ * 
+ * This function runs in an infinite loop!
+*/
 inline void FALLBACK_ERROR()
 {
 	log_msg("FALLBACK_ERROR", "Entered fallback error mode, something went horribly wrong!");

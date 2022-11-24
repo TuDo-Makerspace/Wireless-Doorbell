@@ -16,6 +16,19 @@
  * 
  */
 
+/**
+ * @file Main_Bell.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief Main file for the bell firmware.
+ * 
+ * The following file contains the setup and loop function for the bell firmware.
+ * In the setup function, a Bell object is created and initialized through a BellCFG
+ * object. The run() method of the Bell object is then called continuously in the loop
+ * function to run the firmware.
+ * 
+ */
+
 #ifdef TARGET_DEV_BELL
 
 #include <log.h>
@@ -28,6 +41,9 @@ Bell bell;
 void setup()
 {
 	Serial.begin(115200);
+
+	// Configure door using the BellCFG object
+	// Most parameters are set in the config.h file
 
 	BellCFG cfg;
 

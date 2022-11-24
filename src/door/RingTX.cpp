@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Pedersen, TUDO Makerspace
+ * Copyright (C) 2022 Patrick Pedersen, TU-DO Makerspace
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,17 @@
  * 
  */
 
+/**
+ * @file RingTX.cpp
+ * @author Patrick Pedersen
+ * 
+ * @brief RingTX class implementation
+ * 
+ * The following file contains the implementation of the RingTX class.
+ * For more information on the class, see the header file.
+ * 
+ */
+
 #ifdef TARGET_DEV_DOOR
 
 #include <log.h>
@@ -23,11 +34,13 @@
 
 #include <door/RingTX.h>
 
+// Refer to header for documentation
 RingTX::RingTX()
 {
 	stat = UNINITIALIZED;
 }
 
+// Refer to header for documentation
 RingTX::RingTX(String dest_ip, unsigned int port, unsigned long timeout_ms)
 : ip(dest_ip), port(port), timeout(timeout_ms)
 {
@@ -35,6 +48,7 @@ RingTX::RingTX(String dest_ip, unsigned int port, unsigned long timeout_ms)
 	stat = AWAITING;
 }
 
+// Refer to header for documentation
 void RingTX::send()
 {
 	if (stat == UNINITIALIZED) {
@@ -51,6 +65,7 @@ void RingTX::send()
 	tstamp = millis() + timeout;
 }
 
+// Refer to header for documentation
 bool RingTX::txRingMSG()
 {
 	const char msg = RING_MSG;
@@ -59,6 +74,7 @@ bool RingTX::txRingMSG()
 	return ret;
 }
 
+// Refer to header for documentation
 RingTX::ring_stat RingTX::con()
 {
 	if (client.connected()) {
@@ -77,6 +93,7 @@ RingTX::ring_stat RingTX::con()
 	return CONNECTING;
 }
 
+// Refer to header for documentation
 RingTX::ring_stat RingTX::sen()
 {
 	if (txRingMSG())
@@ -91,6 +108,7 @@ RingTX::ring_stat RingTX::sen()
 	return SENDING;
 }
 
+// Refer to header for documentation
 void RingTX::update()
 {
 	switch (stat) {
@@ -105,6 +123,7 @@ void RingTX::update()
 	}
 }
 
+// Refer to header for documentation
 RingTX::ring_stat RingTX::status()
 {
 	return stat;
