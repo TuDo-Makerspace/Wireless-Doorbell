@@ -17,9 +17,9 @@
  */
 
 /**
- * @file fallback_errror.h
+ * @file fallback_error.h
  * @author Patrick Pedersen, TU-DO Makerspace
- * @brief fallback_errror for the Bell firmware
+ * @brief fallback_error for the Bell firmware
  */
 
 #pragma once
@@ -41,7 +41,7 @@
  * buzzer pins, and will blink the LED and play a A4
  * tone on the buzzer indefinitely.
  * 
- * This function runs in an infinite loop!
+ * @attention This function runs in an infinite loop!
 */
 inline void FALLBACK_ERROR()
 {

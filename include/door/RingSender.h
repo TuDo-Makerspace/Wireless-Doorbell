@@ -57,12 +57,12 @@ class RingSender {
 public:
 	/// State machine states
 	enum ring_stat {
-		UNINITIALIZED,	  /// Only initialized with default constructor
-		AWAITING,	  /// Awaiting a send() call
-		SENDING,	  /// Sending ring message
-		SUCCESS,	  /// Successfully sent ring message to all bells
-		PARTIAL_SUCCESS,  /// Successfully sent ring message to only some bells
-		FAIL		  /// Failed to contact any bells
+		UNINITIALIZED,	  ///< Only initialized with default constructor
+		AWAITING,	  ///< Awaiting a send() call
+		SENDING,	  ///< Sending ring message
+		SUCCESS,	  ///< Successfully sent ring message to all bells
+		PARTIAL_SUCCESS,  ///< Successfully sent ring message to only some bells
+		FAIL		  ///< Failed to contact any bells
 	};
 
 private:

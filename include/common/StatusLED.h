@@ -37,10 +37,10 @@ class StatusLED {
 public:
         /// Possible LED states
         enum led_mode {
-                OFF,
-                ON,
-                BLINK,    /// First ON then OFF
-                BLINK_INV /// First OFF then ON
+                OFF,      ///< Constantly off
+                ON,       ///< Constantly on
+                BLINK,    ///< First ON then OFF
+                BLINK_INV ///< First OFF then ON
         };
 
 private:

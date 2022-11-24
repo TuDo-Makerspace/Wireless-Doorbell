@@ -1,0 +1,17 @@
+digraph "Door"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="Door",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="The Main Door class."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pwr_led\nring_led" ,fontname="Helvetica"];
+  Node2 [label="StatusLED",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classStatusLED.html",tooltip="StatusLED class."];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" cfg" ,fontname="Helvetica"];
+  Node3 [label="DoorCFG",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classDoorCFG.html",tooltip="The DoorCFG class."];
+  Node4 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" ring_sender" ,fontname="Helvetica"];
+  Node4 [label="RingSender",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classRingSender.html",tooltip="The RingSender class."];
+  Node5 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" tx" ,fontname="Helvetica"];
+  Node5 [label="RingTX",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classRingTX.html",tooltip="RingTX class."];
+  Node6 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" wifi_handler" ,fontname="Helvetica"];
+  Node6 [label="WiFiHandler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classWiFiHandler.html",tooltip="WiFihandler class."];
+}

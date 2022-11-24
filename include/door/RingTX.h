@@ -40,12 +40,12 @@ class RingTX {
 public:
 	/// State machine states
 	enum ring_stat {
-		UNINITIALIZED,	/// Only initialized with default constructor
-		AWAITING,	/// Awaiting send() call
-		CONNECTING,	/// Establishing TCP connection to bell
-		SENDING,	/// Sending ring message
-		SUCCESS,	/// Ring message successfully sent
-		FAIL		/// Failed to send ring message (timeout)
+		UNINITIALIZED,	///< Only initialized with default constructor
+		AWAITING,	///< Awaiting send() call
+		CONNECTING,	///< Establishing TCP connection to bell
+		SENDING,	///< Sending ring message
+		SUCCESS,	///< Ring message successfully sent
+		FAIL		///< Failed to send ring message (timeout)
 	};
 
 private:

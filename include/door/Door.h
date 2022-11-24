@@ -46,23 +46,23 @@
 class Door {
 	/// State machine states
 	enum door_state {
-		INIT,		/// Initialization
-		CONNECTING,	/// Connecting to WiFi
-		CONNECTED,	/// Connected to WiFi
-		RINGING,	/// Send ring message
-		ERROR,		/// Error occured
-		ERROR_HANDLING,	/// Error being handled
-		POWER_OFF,	/// Power off
-		POWERED_OFF,	/// Wait for door to power off
+		INIT,		///< Initialization
+		CONNECTING,	///< Connecting to WiFi
+		CONNECTED,	///< Connected to WiFi
+		RINGING,	///< Send ring message
+		ERROR,		///< Error occured
+		ERROR_HANDLING,	///< Error being handled
+		POWER_OFF,	///< Power off
+		POWERED_OFF,	///< Wait for door to power off
 	};
 
 	// Possible errors
 	enum error_type {
-		UNINITIALIZED,	 /// Class only initialized with default constructor
-		CFG_INVALID,	 /// Configuration invalid
-		NO_WIFI,	 /// WiFi not available
-		PARTIAL_SUCCESS, /// Partial success (not all bells rang)
-		FAIL,	 	 /// Failure (no bells rang)
+		UNINITIALIZED,	 ///< Class only initialized with default constructor
+		CFG_INVALID,	 ///< Configuration invalid
+		NO_WIFI,	 ///< WiFi not available
+		PARTIAL_SUCCESS, ///< Partial success (not all bells rang)
+		FAIL,	 	 ///< Failure (no bells rang)
 	};
 
 	DoorCFG cfg;

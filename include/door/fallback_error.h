@@ -17,9 +17,9 @@
  */
 
 /**
- * @file fallback_errror.h
+ * @file fallback_error.h
  * @author Patrick Pedersen, TU-DO Makerspace
- * @brief fallback_errror for the Door firmware
+ * @brief fallback_error for the Door firmware
  */
 
 #pragma once

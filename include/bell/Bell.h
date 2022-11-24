@@ -45,19 +45,19 @@
 class Bell {
 	/// State machine states
 	enum bell_state {
-		INIT,		/// Initialization
-		DISCONNECTED,	/// Disconnected from WiFi
-		CONNECTING,	/// Connecting to WiFi
-		CONNECTED,	/// Connected to WiFi
-		RINGING,	/// Ringing (Ring message received)
-		ERROR,		/// Error occured
-		ERROR_HANDLING	/// Error being handled
+		INIT,		///< Initialization
+		DISCONNECTED,	///< Disconnected from WiFi
+		CONNECTING,	///< Connecting to WiFi
+		CONNECTED,	///< Connected to WiFi
+		RINGING,	///< Ringing (Ring message received)
+		ERROR,		///< Error occured
+		ERROR_HANDLING	///< Error being handled
 	};
 
 	// Possible errors
 	enum error_type {
-		UNINITIALIZED,	/// Class only initialized with default constructor
-		CFG_INVALID	/// Configuration invalid
+		UNINITIALIZED,	///< Class only initialized with default constructor
+		CFG_INVALID	///< Configuration invalid
 	};
 
 	BellCFG cfg;
