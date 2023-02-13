@@ -4,70 +4,82 @@ A wireless doorbell based on the ESP8266
 
 ## Overview
 
-The TU-DO Wireless Doorbell is an open source and open hardware doorbell which runs over WiFi. It comes with two boards, one for the doorbell and one for the receiver, both of which utilize the ESP8266.
+The TU-DO Wireless Doorbell is an open source and open hardware doorbell which runs over WiFi. The project utilizes the ESP8266 microcontroller, and includes two boards, one for the doorbell button and the other for the receiver.
 
-### Doorbell Board
+## Doorbell Board
 
-The doorbell board is placed at the door and has a button to ring the doorbell. It is powered by a 9V battery, making it easy to install.
+The doorbell board is designed to be placed at the door and features a button to trigger the doorbell ring. It is powered by a 9V battery for easy installation.
 
-The circuit essentially consists of a button, two indicator leds, an ESP8266, a 9V battery and MOSFET power latch.
+The circuit of the doorbell board consists of:
+- A button for triggering the doorbell ring
+- Two indicator LEDs (one red and one green)
+- An ESP8266 microcontroller
+- A 9V battery
+- A MOSFET power latch
 
-![]() INSERT IMAGE HERE
+![Doorbell Board Circuit Diagram](INSERT IMAGE HERE)
 
-Once the ring button is pressed, power is provided to the ESP8266 and the power latch is activated. The ESP8266 then connect to the WiFi, send a TCP packet to all receivers, and then unlatches the power, thus fully powering down the device.
+When the ring button is pressed, power is supplied to the ESP8266 and the power latch is activated. The ESP8266 then connects to the WiFi network and sends a TCP packet to all receivers. After successful transmission, the power latch is unlatched and the device fully powers down.
 
-To provide feedback to the user, two indicator leds are used. A red one indicates that the ESP8266 is powered, while a green one indicates the successful transmission of the TCP packet.
+The two indicator LEDs provide feedback to the user:
+- The red LED indicates that the ESP8266 is powered
+- The green LED indicates a successful transmission of the TCP packet
 
-If an error occured, the indicators will flash in a specific pattern. The following table shows the error codes and their corresponding patterns:
+In case of an error, the indicators will flash in a specific pattern, as described in the following table:
 
-INSERT TABLE HERE
+| Error Code | LED Flash Pattern |
+|------------|-------------------|
+| INSERT ERROR CODE 1 | INSERT LED FLASH PATTERN 1 |
+| INSERT ERROR CODE 2 | INSERT LED FLASH PATTERN 2 |
 
-In general, a 9V battery should last for multiple months depending on the usage.
+With normal usage, a 9V battery should last for multiple months.
 
 ### Receiver Board
 
-The receiver board is placed at the receiver's location and has a buzzer to play the ringtone. It is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell.
+A receiver board is placed at a location where the doorbell ring is to be heard, and it features a buzzer for playing the doorbell ringtone. It is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell board.
 
-The circuit essentially consists of a buzzer, a red power indicator led, a white ring indicator led and a ESP8266. Optionally a power mosfet can built in to drive a ring indicator light with a higher voltage (This will also require a higher voltage power supply ex. 12V). This was done to provide more noticable visual feedback in areas that are louder (ex. a workshop in our case).
+The circuit of the receiver board consists of:
+- A buzzer for playing the doorbell ringtone
+- A red power indicator LED
+- A white ring indicator LED
+- An ESP8266 microcontroller
+- An optional power MOSFET (for driving a higher voltage ring indicator light, which would require a higher voltage power supply such as 12V)
 
-![]() INSERT IMAGE HERE
+![Receiver Board Circuit Diagram](INSERT IMAGE HERE)
 
-Once the ESP8266 receives a TCP packet from the door board, it will play a ringtone on the buzzer and flash the white ring indicator led.
+When the ESP8266 on the receiver board receives a TCP packet from the doorbell board, it will play the doorbell ringtone on the buzzer and flash the white ring indicator LED to provide visual feedback.
 
+## Gerbers, BOMs, and Assembly
 
-## Gerbers, BOMs and Assembling
+The Gerber files for the doorbell and receiver boards can be found in the `kicad/(BOARD)/gerbers` folder. Interactive Bill of Materials (BOMs) are available [here](PAGE FOR IBOMS) and provide not only a list of all components, but also a visual representation of the PCB layout, showing where each component is placed. This can be particularly useful during the assembly process.
 
-The gerbers for the doorbell and receiver boards can be found in the `kicad/(BOARD)/gerbers` folder. Interactive BOMs can be found [here](PAGES FOR IBOMS), which not only provides a list of all components, but also provides a interactive PCB view that allows you to see where each component is placed. This is especially useful for assembling the boards.
+The PCB design utilizes many JST connectors, making it easy to incorporate the device into a variety of enclosures. If you have access to a 3D printer, you can also print the enclosures provided in the `STL` folder.
 
-The PCB utilizes allot of JST connectors. The reason for this is that it allows the device to easily be built into generic enclosures. That being said, if you have access to a 3D printer, you can also print the enclosures that are provided in the `STL` folder.
+## Configuring the Firmware and Flashing the Boards
 
-## Configuring the firmware and flashing the boards
+The firmware for the doorbell and receiver boards has been written using PlatformIO, and it is highly recommended to use it for flashing the boards. Before flashing the firmware, you need to configure all necessary settings such as WiFi credentials, the static door IP, the number of receivers, etc. in the `src/config.h` header file.
 
-The firmware has been written using PlatformIO, thus it is highly recommended to use it for flashing the boards.
+> **Important Note on IP Addresses:** The current version of the firmware requires all boards to have a static IP address, and the IP addresses of the receiver boards must be incremented after the doorbell board's IP. For example, if the doorbell board has IP `192.168.0.20`, the first receiver board must have IP `192.168.0.21`, the second receiver board must have IP `192.168.0.22`, and so on.
 
-Before flashing the firware, configure all necessary settings (ex. WiFi credentials, static door ip, number of boards, etc.) in the `src/config.h` header.
+The IP addresses for the receiver boards can be configured in the [platformio.ini](platformio.ini) file. Currently, the targets are set up for TU-DOs, but they can easily be changed to match your own setup.
 
-> **Important note regarding IP addresses:** The current revision of the firmware relies on all boards having a static IP address. In addition, the receiver boards must be incrementally assigned as the IP addresses after the doorbell board. For example, if your doorbell board runs on `192.168.0.20`, then the first receiver board must run on `192.168.0.21`, the second on `192.168.0.22` etc.
+To flash the boards, follow these steps:
+1. Select the corresponding target in PlatformIO.
+2. Remove the ESP8266 from the board that you wish to flash.
+3. Connect the ESP8266 to your computer.
+4. Click the upload button in PlatformIO.
 
-The receiver board IPs are configured in the [platformio.ini](platformio.ini) file. Currently the targets corresponds to the TU-DOs set up, but those can easily be changed to your own setup.
+> Note: Flashing the ESP8266 while it is inside the board may not work properly, so it is recommended to remove the ESP8266 from the board before flashing.
 
-To flash the boards, select the corresponding target in PlatformIO, plug in the ESP8266 of the board that you wish to flash, and click the upload button.
+## Firmware Structure
 
-> Note: Attempting to flash the ESP8266 while it is inside the board may not work. It is highly recommended to remove the ESP8266 from the board before flashing.
+The firmware code is organized in the `src` folder and is comprised of three main parts: `bell`, `door`, and `common`. The code for the doorbell and receiver boards is located in the `bell` and `door` folders, respectively, while code shared between the two is stored in the `common` folder.
 
+The firmware was written in an object-oriented manner and heavily utilizes state machines. Each device is controlled by a main class such as `Door` for the doorbell and `Bell` for the receiver. These classes are then made up of subclasses that handle smaller tasks, such as the `Buzzer` class that manages the buzzer on the receiver and the `RingSender` class that handles the sending of TCP packets from the doorbell.
 
-## Firmware Overview
+A UML diagram of the code structure can be found here (INSERT IMAGE). The codebase also uses doxygen and a reference can be found at [LINK].
 
-The firmware code is located in the `[src](src)` folder. The code is split into three parts: `[bell](src/bell/)`, `[door](src/door/)` and `[common](src/common/)`. The `bell` and `door` folders contain the code for the doorbell and receiver boards respectively, while the `common` folder contains code that is shared between the two.
-
-The firmware was written in a object oriented manner and makes heavy use of state machines. Each device is controlled by a "main" class (ex. `Door` for the doorbell and `Bell` for the receiver). These classes then consists of multiple sub classes that handle smaller individual tasks (ex. the `Buzzer` class handles the buzzer on the receiver, the `RingSender` class handles the TCP packet sending on the doorbell, etc.).
-
-![]() INSERT IMAGE OF UML DIAGRAM HERE
-
-The codebase makes use of doxygen and a reference can be found [here]().
-
-For a deeper understanding of the code, it is highly recommended to read the code comments and the doxygen reference.
-We have tried to make the code as self explanatory as possible, but if you have any questions, feel free to open an issue.
+To gain a deeper understanding of the code, it is recommended to read the code comments and reference the doxygen documentation. If you have any questions, feel free to open an issue. We have made an effort to make the code as self-explanatory as possible, but we are always here to help.
 
 ## License
 
