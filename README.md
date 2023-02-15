@@ -1,5 +1,7 @@
 # TU-DO Wireless Doorbell
 
+![Banner](img/Banner.png)
+
 A wireless doorbell based on the ESP8266
 
 ## Overview
@@ -8,7 +10,7 @@ The TU-DO Wireless Doorbell is an open source and open hardware doorbell which r
 
 ## Doorbell Board
 
-The doorbell board is designed to be placed at the door and features a button to trigger the doorbell ring. It is powered by a 9V battery for easy installation.
+The doorbell board (also refered to as the "Door" board) is designed to be placed at the door and features a button to trigger the doorbell ring. It is powered by a 9V battery for easy installation.
 
 The circuit of the doorbell board consists of:
 - A button for triggering the doorbell ring
@@ -17,7 +19,7 @@ The circuit of the doorbell board consists of:
 - A 9V battery
 - A MOSFET power latch
 
-![Doorbell Board Circuit Diagram](INSERT IMAGE HERE)
+![Door Board Schematic](img/DoorSchem.png)
 
 When the ring button is pressed, power is supplied to the ESP8266 and the power latch is activated. The ESP8266 then connects to the WiFi network and sends a TCP packet to all receivers. After successful transmission, the power latch is unlatched and the device fully powers down.
 
@@ -36,7 +38,7 @@ With normal usage, a 9V battery should last for multiple months.
 
 ### Receiver Board
 
-A receiver board is placed at a location where the doorbell ring is to be heard, and it features a buzzer for playing the doorbell ringtone. It is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell board.
+A receiver board (also refered to as the "Bell" board) is placed at a location where the doorbell ring is to be heard, and it features a buzzer for playing the doorbell ringtone. It is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell board.
 
 The circuit of the receiver board consists of:
 - A buzzer for playing the doorbell ringtone
@@ -45,11 +47,13 @@ The circuit of the receiver board consists of:
 - An ESP8266 microcontroller
 - An optional power MOSFET (for driving a higher voltage ring indicator light, which would require a higher voltage power supply such as 12V)
 
-![Receiver Board Circuit Diagram](INSERT IMAGE HERE)
+![Bell Board Schematic](img/BellSchem.png)
 
 When the ESP8266 on the receiver board receives a TCP packet from the doorbell board, it will play the doorbell ringtone on the buzzer and flash the white ring indicator LED to provide visual feedback.
 
 ## Gerbers, BOMs, and Assembly
+
+![Door Board PCB](img/DoorPCB.png)
 
 The Gerber files for the doorbell and receiver boards can be found in the `kicad/(BOARD)/gerbers` folder. Interactive Bill of Materials (BOMs) are available [here](PAGE FOR IBOMS) and provide not only a list of all components, but also a visual representation of the PCB layout, showing where each component is placed. This can be particularly useful during the assembly process.
 
