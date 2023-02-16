@@ -79,11 +79,19 @@ To flash the boards, follow these steps:
 
 The firmware code is organized in the `src` folder and is comprised of three main parts: `bell`, `door`, and `common`. The code for the doorbell and receiver boards is located in the `bell` and `door` folders, respectively, while code shared between the two is stored in the `common` folder.
 
+![Class Diagram](img/ClassDiagram.png)
+
+> Note: A PDF of the class diagram can be found [here](pdf/ClassDiagram.pdf).
+
 The firmware was written in an object-oriented manner and heavily utilizes state machines. Each device is controlled by a main class such as `Door` for the doorbell and `Bell` for the receiver. These classes are then made up of subclasses that handle smaller tasks, such as the `Buzzer` class that manages the buzzer on the receiver and the `RingSender` class that handles the sending of TCP packets from the doorbell.
 
-A UML diagram of the code structure can be found here (INSERT IMAGE). The codebase also uses doxygen and a reference can be found at [LINK].
+![State Diagram](img/StateDiagram.png)
 
-To gain a deeper understanding of the code, it is recommended to read the code comments and reference the doxygen documentation. If you have any questions, feel free to open an issue. We have made an effort to make the code as self-explanatory as possible, but we are always here to help.
+> Note: A PDF of the state diagram can be found [here](pdf/StateDiagram.pdf).
+
+The codebase also generates a doxygen documentation that can be found [here](INSER GH PAGES).
+
+To fully comprehend the code, we highly recommend reading the comments within the code as well as consulting the doxygen documentation. Although we've endeavored to make the code self-explanatory and provided ample comments, feel free to reach out if you have any questions by opening an issue (make sure to include "QUESTION" in the issue title).
 
 ## License
 
