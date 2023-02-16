@@ -242,6 +242,7 @@ Door::door_state Door::power_off()
 {
 	log_msg("Door::power_off", "Unlatching power, shutting down...");
 
+	wifi_handler.disconnect();
 	pwr_led.mode(StatusLED::OFF);
 	ring_led.mode(StatusLED::OFF);
 
