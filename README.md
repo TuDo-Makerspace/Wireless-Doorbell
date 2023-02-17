@@ -78,7 +78,7 @@ The firmware for the doorbell and receiver boards has been written using Platfor
 
 > **Important Note on IP Addresses:** The current version of the firmware requires all boards to have a static IP address, and the IP addresses of the receiver boards must be incremented after the doorbell board's IP. For example, if the doorbell board has IP `192.168.0.20`, the first receiver board must have IP `192.168.0.21`, the second receiver board must have IP `192.168.0.22`, and so on.
 
-The IP addresses for the receiver boards can be configured in the [platformio.ini](platformio.ini) file. Currently, the targets are set up for TU-DOs, but they can easily be changed to match your own setup.
+The IP addresses for the receiver boards can be configured in the [platformio.ini](platformio.ini) file. Currently, the targets are set up for the TU-DO Makerspace's network, but they can easily be changed to match your own setup.
 
 To flash the boards, follow these steps:
 1. Select the corresponding target in PlatformIO.
