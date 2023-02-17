@@ -41,7 +41,7 @@ For further debugging, the ESP8266 will also print a detailed log over the USB s
 
 ### Receiver Board
 
-A receiver board (also refered to as the "Bell" board) is placed at a location where the doorbell ring is to be heard, and it features a buzzer for playing the doorbell ringtone. It is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell board.
+One or more receiver boards (also refered to as the "Bell" boards) are placed at locations where the doorbell ring is to be heard, and feature a buzzer for playing the doorbell ringtone. The receiver is continuously powered by a 5V-12V power supply and acts as a server, waiting for TCP packets from the doorbell board.
 
 The circuit of the receiver board consists of:
 - A buzzer for playing the doorbell ringtone
