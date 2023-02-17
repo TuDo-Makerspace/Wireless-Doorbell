@@ -102,7 +102,7 @@ The firmware was written in an object-oriented manner and heavily utilizes state
 
 > Note: A PDF of the state diagram can be found [here](pdf/StateDiagram.pdf).
 
-The codebase also generates a doxygen documentation that can be found [here](INSER GH PAGES).
+The codebase also generates a doxygen documentation that can be found [here](https://TU-DO-Makerspace.github.io/Wireless-Doorbell).
 
 To fully comprehend the code, we highly recommend reading the comments within the code as well as consulting the doxygen documentation. Although we've endeavored to make the code self-explanatory and provided ample comments, feel free to reach out if you have any questions by opening an issue (make sure to include "QUESTION" in the issue title).
 
