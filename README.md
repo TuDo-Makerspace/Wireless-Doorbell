@@ -21,20 +21,23 @@ The circuit of the doorbell board consists of:
 
 ![Door Board Schematic](img/DoorSchem.png)
 
-When the ring button is pressed, power is supplied to the ESP8266 and the power latch is activated. The ESP8266 then connects to the WiFi network and sends a TCP packet to all receivers. After successful transmission, the power latch is unlatched and the device fully powers down.
+When the ring button is pressed, power is supplied to the ESP8266 and the power latch is activated. The ESP8266 then connects to the WiFi network and sends a TCP packet to all receivers. After successful transmission, the power latch is unlatched and the device fully powers down. With normal usage, a 9V battery should last for multiple months.
 
-The two indicator LEDs provide feedback to the user:
+During normal operation, the two indicator LEDs provide the following feedback to the user:
 - The red LED indicates that the ESP8266 is powered
 - The green LED indicates a successful transmission of the TCP packet
 
-In case of an error, the indicators will flash in a specific pattern, as described in the following table:
+In case of an error however, the indicators are used for troubleshooting and will flash in a specific pattern, as described in the following table:
 
-| Error Code | LED Flash Pattern |
-|------------|-------------------|
-| INSERT ERROR CODE 1 | INSERT LED FLASH PATTERN 1 |
-| INSERT ERROR CODE 2 | INSERT LED FLASH PATTERN 2 |
+| LED Flash Pattern 				| Error 											|
+|-----------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Power LED flashes 6x, Connection LED Off 	| Invalid `DoorCFG` provided (This can only occur if the Firmware code has been modified) 	|
+| Power LED & Connection LED flash 3x 		| WiFi connection failed 									|
+| Power LED flashes 3x, Connection LED Off 	| Failed to ring all Bells (Receivers) 								|
+| Power LED & Connection LED flash 3x 		| Some, but not all Bells (Receivers) rang 							|
+| Power LED & Connection LED flash alternately 	| `Door` class object improperly initialized (This can only occur if the Firmware code has been modified) |
 
-With normal usage, a 9V battery should last for multiple months.
+For further debugging, the ESP8266 will also print a detailed log over the USB serial monitor at `115200` baud.
 
 ### Receiver Board
 
@@ -50,6 +53,16 @@ The circuit of the receiver board consists of:
 ![Bell Board Schematic](img/BellSchem.png)
 
 When the ESP8266 on the receiver board receives a TCP packet from the doorbell board, it will play the doorbell ringtone on the buzzer and flash the white ring indicator LED to provide visual feedback.
+
+Additionally, if an error occurs, the ring indicator LED and the buzzer are used for troubleshooting, as described in the following table:
+
+| LED Flash Pattern 				   	    | Error 												      |
+|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| LED continously flashes slowly, Buzzer is silent	    | No WiFi connection, the device is attempting to (re-)connect to the WiFi network			      |
+| LED continously flashes quickly (250ms), Buzzer is silent | Invalid `BellCFG` provided (This can only occur if the Firmware code has been modified) 		      |
+| LED continously flashes quickly (250ms), Buzzer beeps	    | `Bell` class object improperly initialized (This can only occur if the Firmware code has been modified) |
+
+For further debugging, the ESP8266 will also print a detailed log over the USB serial monitor at `115200` baud.
 
 ## Gerbers, BOMs, and Assembly
 
