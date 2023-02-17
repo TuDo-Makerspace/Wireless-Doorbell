@@ -68,7 +68,7 @@ For further debugging, the ESP8266 will also print a detailed log over the USB s
 
 ![Door Board PCB](img/DoorPCB.png)
 
-The Gerber files for the doorbell and receiver boards can be found in the `kicad/(BOARD)/gerbers` folder. Interactive Bill of Materials (BOMs) are available [here](PAGE FOR IBOMS) and provide not only a list of all components, but also a visual representation of the PCB layout, showing where each component is placed. This can be particularly useful during the assembly process.
+The Gerber files for the doorbell and receiver boards can be found in the `kicad/(BOARD)/gerbers` folder. An Interactive Bill Of Materials (IBOM) for the Door board is available [here](https://TU-DO-Makerspace.github.io/Wireless-Doorbell/door-ibom.html) and for the Bell board [here](https://TU-DO-Makerspace.github.io/Wireless-Doorbell/bell-ibom.html). These provide not only a list of all components, but also a visual representation of the PCB layout, showing where each component is placed. This can be particularly useful during the assembly process.
 
 The PCB design utilizes many JST connectors, making it easy to incorporate the device into a variety of enclosures. If you have access to a 3D printer, you can also print the enclosures provided in the `STL` folder.
 
