@@ -1,14 +1,24 @@
-# TU-DO Wireless Doorbell
+# TU-DO Wireless Doorbell <!-- omit in toc -->
 
 ![Banner](img/Banner.png)
 
 A wireless doorbell based on the ESP8266
 
+## Table Of Contents <!-- omit in toc -->
+
+- [Overview](#overview)
+	- [Doorbell Board](#doorbell-board)
+	- [Receiver Board](#receiver-board)
+- [Gerbers, BOMs, and Assembly](#gerbers-boms-and-assembly)
+- [Configuring the Firmware and Flashing the Boards](#configuring-the-firmware-and-flashing-the-boards)
+- [Firmware Structure](#firmware-structure)
+- [License](#license)
+
 ## Overview
 
 The TU-DO Wireless Doorbell is an open source and open hardware doorbell which runs over WiFi. The project utilizes the ESP8266 microcontroller, and includes two boards, one for the doorbell button and the other for the receiver.
 
-## Doorbell Board
+### Doorbell Board
 
 The doorbell board (also refered to as the "Door" board) is designed to be placed at the door and features a button to trigger the doorbell ring. It is powered by a 9V battery for easy installation.
 
@@ -90,7 +100,7 @@ To flash the boards, follow these steps:
 
 ## Firmware Structure
 
-The firmware code is organized in the `src` folder and is comprised of three main parts: `bell`, `door`, and `common`. The code for the doorbell and receiver boards is located in the `bell` and `door` folders, respectively, while code shared between the two is stored in the `common` folder.
+The firmware code is organized in the `src` folder and is comprised of three main parts: `bell`, `door`, and `common`. The code for the doorbell and receiver boards is located in the `door` and `bell` folders, respectively, while code shared between the two is stored in the `common` folder.
 
 ![Class Diagram](img/ClassDiagram.png)
 
